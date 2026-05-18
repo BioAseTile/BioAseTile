@@ -15,6 +15,262 @@
 
 <style>
 /* =============================== */
+/*   LOGIN OVERLAY                  */
+/* =============================== */
+.login-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  overflow: hidden;
+}
+
+.login-overlay::before, .login-overlay::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.login-overlay::before {
+  top: -30%; right: -10%;
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(107, 166, 68, 0.18) 0%, transparent 65%);
+}
+
+.login-overlay::after {
+  bottom: -30%; left: -10%;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(132, 193, 88, 0.12) 0%, transparent 65%);
+}
+
+.login-overlay.hidden { display: none; }
+
+.login-card {
+  background: linear-gradient(180deg, var(--paper) 0%, var(--paper-deep) 100%);
+  color: var(--ink);
+  padding: 2.5rem 2.2rem 2.2rem;
+  border-radius: 20px;
+  max-width: 380px;
+  width: 100%;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.4);
+  position: relative;
+  z-index: 1;
+}
+
+.login-card::before, .login-card::after {
+  content: '';
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border: 2px solid var(--green);
+}
+
+.login-card::before {
+  top: 1rem; left: 1rem;
+  border-right: none; border-bottom: none;
+  border-top-left-radius: 8px;
+}
+
+.login-card::after {
+  bottom: 1rem; right: 1rem;
+  border-left: none; border-top: none;
+  border-bottom-right-radius: 8px;
+}
+
+.login-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  justify-content: center;
+}
+
+.login-brand img {
+  width: 46px; height: 46px;
+  object-fit: contain;
+  border-radius: 50%;
+  background: var(--paper-soft);
+  padding: 4px;
+  box-shadow: inset 0 0 0 1.5px rgba(107, 166, 68, 0.35);
+}
+
+.login-brand-name {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.login-brand-name span {
+  color: var(--green);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.login-label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  justify-content: center;
+}
+
+.login-label::before, .login-label::after {
+  content: '';
+  width: 16px;
+  height: 1px;
+  background: var(--green);
+}
+
+.login-card h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 1.5rem;
+  margin-bottom: 0.4rem;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  text-align: center;
+}
+
+.login-card h1 em { color: var(--green-deep); font-style: italic; }
+
+.login-card .subtitle {
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.login-field {
+  margin-bottom: 0.85rem;
+}
+
+.login-field label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 0.35rem;
+  font-weight: 500;
+}
+
+.login-field input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--gray-300);
+  border-radius: 10px;
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  color: var(--ink);
+  background: white;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+
+.login-field input:focus {
+  outline: none;
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(107, 166, 68, 0.15);
+}
+
+.login-error {
+  color: var(--terracotta);
+  font-size: 0.82rem;
+  margin-top: 0.6rem;
+  margin-bottom: 0.6rem;
+  padding: 0.55rem 0.8rem;
+  background: rgba(199, 93, 60, 0.08);
+  border-left: 3px solid var(--terracotta);
+  border-radius: 6px;
+  display: none;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.login-error.show { display: flex; }
+
+.login-error svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2.2;
+  flex-shrink: 0;
+}
+
+.login-submit {
+  width: 100%;
+  padding: 0.9rem;
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  border-radius: 100px;
+  cursor: pointer;
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: background 0.3s, transform 0.2s;
+  margin-top: 0.4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.login-submit:hover {
+  background: var(--green);
+  transform: translateY(-1px);
+}
+
+.login-submit svg {
+  width: 16px; height: 16px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+}
+
+.login-footnote {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: var(--gray-500);
+  text-transform: uppercase;
+}
+
+/* Botón de logout en el header */
+.btn-logout {
+  background: rgba(199, 93, 60, 0.12);
+  color: rgba(245, 237, 208, 0.85);
+  border-color: rgba(199, 93, 60, 0.3);
+}
+
+.btn-logout:hover {
+  background: var(--terracotta);
+  color: var(--paper);
+  border-color: var(--terracotta);
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+/* =============================== */
+/* =============================== */
 /*   DESIGN TOKENS                  */
 /* =============================== */
 :root {
@@ -758,6 +1014,46 @@ main {
 <body>
 
 <!-- ============================== -->
+<!--   LOGIN OVERLAY                -->
+<!-- ============================== -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-card">
+    <div class="login-brand">
+      <img src="logo.jpg" alt="" onerror="this.style.display='none'">
+      <div class="login-brand-name">BioAse <span>Tile</span></div>
+    </div>
+
+    <div class="login-label">Acceso restringido</div>
+    <h1>Inicia <em>sesión</em></h1>
+    <p class="subtitle">Este panel es solo para el equipo del proyecto.</p>
+
+    <form id="loginForm" onsubmit="handleLogin(event)">
+      <div class="login-field">
+        <label for="loginUser">Usuario</label>
+        <input type="text" id="loginUser" autocomplete="username" required autofocus>
+      </div>
+
+      <div class="login-field">
+        <label for="loginPass">Contraseña</label>
+        <input type="password" id="loginPass" autocomplete="current-password" required>
+      </div>
+
+      <div class="login-error" id="loginError">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01" stroke-linecap="round"/></svg>
+        <span>Usuario o contraseña incorrectos</span>
+      </div>
+
+      <button type="submit" class="login-submit">
+        <span>Entrar al dashboard</span>
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </form>
+
+    <div class="login-footnote">BioAse Tile · Dashboard interno</div>
+  </div>
+</div>
+
+<!-- ============================== -->
 <!--   HEADER                       -->
 <!-- ============================== -->
 <header>
@@ -786,6 +1082,9 @@ main {
     <button class="btn btn-primary" onclick="showExportModal()">
       <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <span class="btn-text">Descargar HTML</span>
+    </button>
+    <button class="btn btn-logout" onclick="handleLogout()" title="Cerrar sesión">
+      <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
   </div>
 </header>
@@ -1337,17 +1636,25 @@ main {
 
       <div class="qr-section">
         <div id="qrcode-preview"></div>
+
         <div class="qr-controls">
           <input type="text" id="qrUrlInput" class="input" placeholder="https://tu-sitio.com" value="https://bioasetile.github.io/bioase-tile/">
-          <button class="btn btn-primary" onclick="generateQRCode()" style="white-space: nowrap;">
+          <button class="btn btn-secondary" onclick="generateQRCode()" style="white-space: nowrap;">
             <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;"><path d="M3 12h18M12 3v18" stroke-linecap="round"/></svg>
-            Generar
+            Regenerar
           </button>
         </div>
-        <button class="btn btn-secondary" onclick="downloadQRCode()" style="margin-top: 0.5rem;">
-          <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Descargar PNG
-        </button>
+
+        <div style="display: flex; justify-content: center; margin-top: 1.2rem;">
+          <button class="btn btn-primary" onclick="downloadQRCode()" style="padding: 0.85rem 2rem; font-size: 0.9rem;">
+            <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Descargar QR como PNG
+          </button>
+        </div>
+
+        <p style="font-size: 0.8rem; color: var(--gray-500); margin-top: 1rem;">
+          Tip: También puedes hacer click derecho sobre el QR de arriba y elegir "Guardar imagen como..."
+        </p>
       </div>
     </div>
 
@@ -1387,6 +1694,92 @@ main {
 </div>
 
 <script>
+// =============================================
+//   🔐 AUTENTICACIÓN
+//   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//   PERSONALIZAR: cambia el usuario y contraseña
+//   Recuerda: como el repo es público, cualquiera
+//   técnico puede ver estas credenciales en el
+//   código. Aún así, bloquea el acceso casual.
+// =============================================
+const AUTH_USERS = {
+  // Usuario: contraseña
+  'bioase': 'tile2026',
+  'equipo612': 'conalep'
+};
+
+const AUTH_SESSION_KEY = 'bioase_auth_session';
+const AUTH_SESSION_HOURS = 8; // duración de sesión
+
+function checkAuth() {
+  try {
+    const session = JSON.parse(localStorage.getItem(AUTH_SESSION_KEY) || 'null');
+    if (!session) return false;
+    const now = Date.now();
+    if (now > session.expiresAt) {
+      localStorage.removeItem(AUTH_SESSION_KEY);
+      return false;
+    }
+    return true;
+  } catch(e) { return false; }
+}
+
+function handleLogin(event) {
+  event.preventDefault();
+  const user = document.getElementById('loginUser').value.trim().toLowerCase();
+  const pass = document.getElementById('loginPass').value;
+  const errorEl = document.getElementById('loginError');
+
+  if (AUTH_USERS[user] && AUTH_USERS[user] === pass) {
+    // Éxito
+    const session = {
+      user,
+      loggedAt: Date.now(),
+      expiresAt: Date.now() + (AUTH_SESSION_HOURS * 60 * 60 * 1000)
+    };
+    localStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(session));
+    hideLogin();
+    setTimeout(() => showToast(`Bienvenido, ${user}`), 300);
+  } else {
+    // Error
+    errorEl.classList.add('show');
+    document.getElementById('loginPass').value = '';
+    document.getElementById('loginPass').focus();
+    // Sacudida sutil
+    const card = document.querySelector('.login-card');
+    card.style.animation = 'shake 0.4s';
+    setTimeout(() => card.style.animation = '', 400);
+  }
+}
+
+function hideLogin() {
+  document.getElementById('loginOverlay').classList.add('hidden');
+  document.body.style.overflow = 'hidden'; // mantener bloqueado el body
+}
+
+function showLogin() {
+  document.getElementById('loginOverlay').classList.remove('hidden');
+  document.getElementById('loginError').classList.remove('show');
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+  setTimeout(() => document.getElementById('loginUser').focus(), 100);
+}
+
+function handleLogout() {
+  if (!confirm('¿Cerrar sesión? Tus cambios guardados localmente se mantendrán.')) return;
+  localStorage.removeItem(AUTH_SESSION_KEY);
+  showLogin();
+  showToast('Sesión cerrada');
+}
+
+// Verificar auth al cargar
+if (checkAuth()) {
+  hideLogin();
+} else {
+  // Login visible, focus en el usuario después de un breve delay
+  setTimeout(() => document.getElementById('loginUser').focus(), 100);
+}
+
 // =============================================
 //   DEFAULT DATA — los valores iniciales
 // =============================================
@@ -1762,19 +2155,28 @@ function generateQRCode() {
 
 function downloadQRCode() {
   const container = document.getElementById('qrcode-preview');
-  const img = container.querySelector('img');
   const canvas = container.querySelector('canvas');
+  const img = container.querySelector('img');
+
   let dataURL;
-  if (img && img.src) dataURL = img.src;
-  else if (canvas) dataURL = canvas.toDataURL('image/png');
-  else { showToast('⚠️ Genera un QR primero'); return; }
+
+  // Prefer canvas (más alta calidad) si está disponible
+  if (canvas) {
+    dataURL = canvas.toDataURL('image/png');
+  } else if (img && img.src) {
+    dataURL = img.src;
+  } else {
+    showToast('⚠️ Genera un QR primero');
+    return;
+  }
+
   const a = document.createElement('a');
   a.href = dataURL;
   a.download = 'bioase-tile-qr.png';
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
-  showToast('QR descargado');
+  showToast('QR descargado correctamente');
 }
 
 // =============================================
