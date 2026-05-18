@@ -1,0 +1,2102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — BioAse Tile</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/jpeg" href="logo.jpg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=DM+Sans:opsz,wght@9..40,300..600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
+
+<style>
+/* =============================== */
+/*   DESIGN TOKENS                  */
+/* =============================== */
+:root {
+  --paper: #F5EDD0;
+  --paper-deep: #E8DCB8;
+  --paper-soft: #FAF6E9;
+  --green: #6BA644;
+  --green-bright: #84C158;
+  --green-deep: #2D5016;
+  --terracotta: #C75D3C;
+  --earth: #7A4F2C;
+  --ink: #1A1F12;
+  --ink-soft: #4A4A3A;
+  --gray-100: #F4F4F2;
+  --gray-200: #E8E8E4;
+  --gray-300: #D4D4CE;
+  --gray-500: #8A8A82;
+  --display: 'Fraunces', Georgia, serif;
+  --sans: 'DM Sans', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  background: var(--ink);
+  color: var(--paper);
+  line-height: 1.5;
+  overflow: hidden;
+  height: 100vh;
+}
+
+/* =============================== */
+/*   HEADER                         */
+/* =============================== */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 1.5rem;
+  background: var(--ink);
+  border-bottom: 1px solid rgba(245, 237, 208, 0.08);
+  z-index: 10;
+  position: relative;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.brand img {
+  width: 36px; height: 36px;
+  object-fit: contain;
+  border-radius: 50%;
+  background: var(--paper-soft);
+  padding: 3px;
+  box-shadow: inset 0 0 0 1px rgba(107, 166, 68, 0.35);
+}
+
+.brand-name {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.05rem;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.brand-name span {
+  color: var(--green-bright);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.brand-name small {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(245, 237, 208, 0.5);
+  margin-top: 0.15rem;
+}
+
+.header-actions {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.btn {
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 500;
+  padding: 0.55rem 1.1rem;
+  border-radius: 100px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+.btn-ghost {
+  background: transparent;
+  color: rgba(245, 237, 208, 0.75);
+  border-color: rgba(245, 237, 208, 0.15);
+}
+.btn-ghost:hover { color: var(--paper); border-color: rgba(245, 237, 208, 0.3); }
+
+.btn-primary {
+  background: var(--green);
+  color: var(--paper);
+  border-color: var(--green);
+}
+.btn-primary:hover { background: var(--green-bright); border-color: var(--green-bright); }
+
+.btn-secondary {
+  background: rgba(245, 237, 208, 0.08);
+  color: var(--paper);
+  border-color: rgba(245, 237, 208, 0.2);
+}
+.btn-secondary:hover { background: rgba(245, 237, 208, 0.15); }
+
+/* =============================== */
+/*   LAYOUT: sidebar + content      */
+/* =============================== */
+.app {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  height: calc(100vh - 64px);
+  background: var(--gray-100);
+}
+
+aside {
+  background: var(--ink);
+  color: var(--paper);
+  overflow-y: auto;
+  padding: 1rem 0;
+  border-right: 1px solid rgba(245, 237, 208, 0.05);
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 1.5rem;
+  font-size: 0.88rem;
+  color: rgba(245, 237, 208, 0.6);
+  cursor: pointer;
+  border-left: 2px solid transparent;
+  transition: all 0.25s;
+  user-select: none;
+}
+
+.nav-item:hover {
+  color: var(--paper);
+  background: rgba(245, 237, 208, 0.04);
+}
+
+.nav-item.active {
+  color: var(--green-bright);
+  background: rgba(132, 193, 88, 0.08);
+  border-left-color: var(--green-bright);
+}
+
+.nav-item svg {
+  width: 16px; height: 16px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  flex-shrink: 0;
+}
+
+.nav-group {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(245, 237, 208, 0.35);
+  padding: 1.2rem 1.5rem 0.5rem;
+}
+
+.nav-group:not(:first-child) {
+  border-top: 1px solid rgba(245, 237, 208, 0.05);
+  margin-top: 0.5rem;
+}
+
+/* =============================== */
+/*   MAIN PANEL                     */
+/* =============================== */
+main {
+  overflow-y: auto;
+  background: var(--gray-100);
+  color: var(--ink);
+}
+
+.page {
+  display: none;
+  padding: 2rem 2.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.page.active { display: block; }
+
+.page-head {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--gray-300);
+}
+
+.page-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 0.5rem;
+}
+
+.page-title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 2.2rem;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  color: var(--ink);
+}
+
+.page-title em { color: var(--green-deep); font-style: italic; }
+
+.page-subtitle {
+  margin-top: 0.7rem;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  max-width: 580px;
+}
+
+/* =============================== */
+/*   FORM ELEMENTS                  */
+/* =============================== */
+.field-group {
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: 14px;
+  padding: 1.5rem;
+  margin-bottom: 1.2rem;
+  transition: border-color 0.25s;
+}
+
+.field-group:hover { border-color: var(--gray-300); }
+
+.field-label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.field-label .hint {
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--gray-500);
+  font-weight: 400;
+  margin-left: 0.4rem;
+}
+
+.input, .textarea, .select {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--gray-300);
+  border-radius: 8px;
+  font-family: var(--sans);
+  font-size: 0.92rem;
+  color: var(--ink);
+  background: white;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+
+.input:focus, .textarea:focus, .select:focus {
+  outline: none;
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(107, 166, 68, 0.12);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 80px;
+  font-family: var(--sans);
+  line-height: 1.5;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.field-row.three { grid-template-columns: 1fr 1fr 1fr; }
+
+@media (max-width: 700px) {
+  .field-row, .field-row.three { grid-template-columns: 1fr; }
+}
+
+.help-text {
+  font-size: 0.78rem;
+  color: var(--gray-500);
+  margin-top: 0.5rem;
+  line-height: 1.4;
+}
+
+/* Image upload */
+.image-upload {
+  border: 2px dashed var(--gray-300);
+  border-radius: 10px;
+  padding: 1.2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s;
+  background: var(--paper-soft);
+  position: relative;
+}
+
+.image-upload:hover {
+  border-color: var(--green);
+  background: rgba(107, 166, 68, 0.04);
+}
+
+.image-upload input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.image-preview {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.image-preview-thumb {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: var(--gray-200);
+  flex-shrink: 0;
+}
+
+.image-preview-info {
+  text-align: left;
+  flex: 1;
+  min-width: 0;
+}
+
+.image-preview-name {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--ink);
+  word-break: break-all;
+  margin-bottom: 0.3rem;
+}
+
+.image-preview-status {
+  font-size: 0.75rem;
+  color: var(--gray-500);
+}
+
+.image-preview-status.changed {
+  color: var(--green);
+  font-weight: 600;
+}
+
+/* List of items (steps, materials, foda, etc.) */
+.item-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.item-card {
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  position: relative;
+  transition: border-color 0.25s, transform 0.25s;
+}
+
+.item-card:hover { border-color: var(--gray-300); }
+
+.item-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.8rem;
+  gap: 0.5rem;
+}
+
+.item-card-num {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--green);
+  font-weight: 600;
+}
+
+.item-card-actions {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.icon-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: var(--gray-100);
+  border: 1px solid var(--gray-200);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-soft);
+  transition: all 0.25s;
+}
+
+.icon-btn:hover { background: var(--gray-200); color: var(--ink); }
+
+.icon-btn.danger:hover {
+  background: rgba(199, 93, 60, 0.1);
+  color: var(--terracotta);
+  border-color: var(--terracotta);
+}
+
+.icon-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+.add-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.85rem;
+  background: white;
+  border: 1.5px dashed var(--gray-300);
+  border-radius: 10px;
+  cursor: pointer;
+  color: var(--ink-soft);
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  font-weight: 500;
+  transition: all 0.25s;
+  margin-top: 0.5rem;
+}
+
+.add-button:hover {
+  border-color: var(--green);
+  color: var(--green);
+  background: rgba(107, 166, 68, 0.04);
+}
+
+.add-button svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+/* =============================== */
+/*   QR PAGE                        */
+/* =============================== */
+.qr-section {
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: 14px;
+  padding: 2rem;
+  text-align: center;
+}
+
+#qrcode-preview {
+  display: inline-block;
+  padding: 1rem;
+  background: white;
+  border-radius: 12px;
+  margin: 1rem 0 1.5rem;
+  border: 1px solid var(--gray-200);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+#qrcode-preview img, #qrcode-preview canvas { display: block; }
+
+.qr-controls {
+  display: flex;
+  gap: 0.5rem;
+  max-width: 480px;
+  margin: 0 auto 1rem;
+}
+
+@media (max-width: 600px) {
+  .qr-controls { flex-direction: column; }
+}
+
+/* =============================== */
+/*   HOME / OVERVIEW                */
+/* =============================== */
+.overview-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 700px) {
+  .overview-grid { grid-template-columns: 1fr; }
+}
+
+.overview-card {
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: 14px;
+  padding: 1.5rem;
+  transition: all 0.25s;
+  cursor: pointer;
+}
+
+.overview-card:hover {
+  border-color: var(--green);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+.overview-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: rgba(107, 166, 68, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--green);
+  margin-bottom: 1rem;
+}
+
+.overview-icon svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+.overview-card h3 {
+  font-family: var(--display);
+  font-size: 1.15rem;
+  color: var(--ink);
+  margin-bottom: 0.3rem;
+}
+
+.overview-card p {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  line-height: 1.4;
+}
+
+.help-banner {
+  background: linear-gradient(135deg, var(--green-deep) 0%, var(--green) 100%);
+  color: var(--paper);
+  padding: 1.8rem;
+  border-radius: 14px;
+  margin-bottom: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.help-banner::before {
+  content: '';
+  position: absolute;
+  top: -50%; right: -10%;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: rgba(132, 193, 88, 0.2);
+  pointer-events: none;
+}
+
+.help-banner h2 {
+  font-family: var(--display);
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin-bottom: 0.5rem;
+  position: relative;
+}
+
+.help-banner p {
+  font-size: 0.92rem;
+  opacity: 0.9;
+  max-width: 540px;
+  position: relative;
+  line-height: 1.5;
+}
+
+.help-banner em { font-style: italic; color: var(--paper); font-weight: 500; }
+
+/* =============================== */
+/*   TOAST NOTIFICATION             */
+/* =============================== */
+.toast {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(150%);
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0.85rem 1.4rem;
+  border-radius: 100px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  border: 1px solid var(--green);
+  max-width: 90%;
+}
+
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+.toast svg { width: 16px; height: 16px; stroke: var(--green-bright); fill: none; stroke-width: 2.5; }
+
+/* =============================== */
+/*   MODAL                          */
+/* =============================== */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  z-index: 999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.modal-backdrop.show { display: flex; }
+
+.modal {
+  background: white;
+  color: var(--ink);
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+}
+
+.modal h2 {
+  font-family: var(--display);
+  font-size: 1.4rem;
+  margin-bottom: 0.6rem;
+  color: var(--ink);
+}
+
+.modal p { color: var(--ink-soft); margin-bottom: 1rem; line-height: 1.5; }
+
+.modal-steps {
+  background: var(--gray-100);
+  border-radius: 10px;
+  padding: 1.2rem;
+  margin: 1rem 0;
+  font-size: 0.88rem;
+}
+
+.modal-steps ol {
+  padding-left: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.modal-steps strong { color: var(--green-deep); font-weight: 600; }
+
+.modal-actions {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: flex-end;
+  margin-top: 1.2rem;
+}
+
+/* =============================== */
+/*   MOBILE                         */
+/* =============================== */
+.mobile-nav-toggle {
+  display: none;
+  background: rgba(245, 237, 208, 0.1);
+  border: 1px solid rgba(245, 237, 208, 0.2);
+  color: var(--paper);
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-nav-toggle svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+@media (max-width: 880px) {
+  .app { grid-template-columns: 1fr; }
+  aside {
+    position: fixed;
+    top: 64px;
+    left: 0; bottom: 0;
+    width: 240px;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 50;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.3);
+  }
+  aside.open { transform: translateX(0); }
+  .mobile-nav-toggle { display: inline-flex; }
+  .page { padding: 1.5rem 1.2rem; }
+  .page-title { font-size: 1.7rem; }
+  header { padding: 0.8rem 1.2rem; }
+  .header-actions .btn-text { display: none; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ============================== -->
+<!--   HEADER                       -->
+<!-- ============================== -->
+<header>
+  <div style="display: flex; align-items: center; gap: 1rem;">
+    <button class="mobile-nav-toggle" onclick="toggleSidebar()" aria-label="Menú">
+      <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" stroke-linecap="round"/></svg>
+    </button>
+    <div class="brand">
+      <img src="logo.jpg" alt="" onerror="this.style.display='none'">
+      <div class="brand-name">
+        <span>BioAse <em style="color:var(--green-bright);font-style:italic;font-weight:400;">Tile</em></span>
+        <small>Dashboard</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="header-actions">
+    <a href="index.html" target="_blank" class="btn btn-ghost">
+      <svg viewBox="0 0 24 24"><path d="M15 3h6v6M10 14L21 3M21 14v7H3V3h7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="btn-text">Ver sitio</span>
+    </a>
+    <button class="btn btn-secondary" onclick="resetAll()">
+      <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5M21 12a9 9 0 0 1-15 6.7L3 16M3 21v-5h5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="btn-text">Restablecer</span>
+    </button>
+    <button class="btn btn-primary" onclick="showExportModal()">
+      <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="btn-text">Descargar HTML</span>
+    </button>
+  </div>
+</header>
+
+<!-- ============================== -->
+<!--   APP LAYOUT                   -->
+<!-- ============================== -->
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar">
+    <div class="nav-group">Inicio</div>
+    <div class="nav-item active" data-page="home">
+      <svg viewBox="0 0 24 24"><path d="M3 12l9-9 9 9M5 10v10h14V10" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Resumen
+    </div>
+
+    <div class="nav-group">Contenido</div>
+    <div class="nav-item" data-page="hero">
+      <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10" stroke-linecap="round"/></svg>
+      Hero principal
+    </div>
+    <div class="nav-item" data-page="nosotros">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5 21v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2" stroke-linecap="round"/></svg>
+      Nosotros
+    </div>
+    <div class="nav-item" data-page="producto">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9" stroke-linecap="round"/></svg>
+      Producto
+    </div>
+    <div class="nav-item" data-page="materiales">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v6M12 17v6M4.2 4.2l4.3 4.3M15.5 15.5l4.3 4.3M1 12h6M17 12h6M4.2 19.8l4.3-4.3M15.5 8.5l4.3-4.3" stroke-linecap="round"/></svg>
+      Materiales
+    </div>
+    <div class="nav-item" data-page="proceso">
+      <svg viewBox="0 0 24 24"><path d="M9 11l3 3 8-8M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Proceso
+    </div>
+    <div class="nav-item" data-page="impacto">
+      <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Impacto
+    </div>
+    <div class="nav-item" data-page="foda">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      FODA
+    </div>
+    <div class="nav-item" data-page="galeria">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21" stroke-linecap="round"/></svg>
+      Galería
+    </div>
+
+    <div class="nav-group">Configuración</div>
+    <div class="nav-item" data-page="contacto">
+      <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Contacto y redes
+    </div>
+    <div class="nav-item" data-page="logo-video">
+      <svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+      Logo y video
+    </div>
+
+    <div class="nav-group">Herramientas</div>
+    <div class="nav-item" data-page="qr">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3M17 14v3M14 17v3M20 17v4M17 21h4" stroke-linecap="round"/></svg>
+      Generador QR
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main onclick="closeSidebarOnMobile()">
+
+    <!-- ===== PAGE: HOME ===== -->
+    <div class="page active" data-page="home">
+      <div class="page-head">
+        <div class="page-eyebrow">Dashboard</div>
+        <h1 class="page-title">Bienvenidos al <em>panel de control</em></h1>
+        <p class="page-subtitle">Aquí pueden editar todo el contenido del sitio sin tocar código. Cuando terminen, descarguen el HTML actualizado y súbanlo a GitHub.</p>
+      </div>
+
+      <div class="help-banner">
+        <h2>¿Cómo funciona?</h2>
+        <p>Editen las secciones desde el menú lateral. Cada cambio se guarda automáticamente en su navegador. Cuando estén listos, presionen <em>"Descargar HTML"</em> arriba y reemplacen el <em>index.html</em> de su repositorio en GitHub.</p>
+      </div>
+
+      <div class="overview-grid">
+        <div class="overview-card" onclick="goToPage('hero')">
+          <div class="overview-icon">
+            <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10" stroke-linecap="round"/></svg>
+          </div>
+          <h3>Hero principal</h3>
+          <p>Edita el título grande, el eslogan y la descripción inicial del sitio.</p>
+        </div>
+
+        <div class="overview-card" onclick="goToPage('proceso')">
+          <div class="overview-icon">
+            <svg viewBox="0 0 24 24"><path d="M9 11l3 3 8-8M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Pasos del proceso</h3>
+          <p>Modifica, agrega o elimina los pasos de elaboración de la loseta.</p>
+        </div>
+
+        <div class="overview-card" onclick="goToPage('galeria')">
+          <div class="overview-icon">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21" stroke-linecap="round"/></svg>
+          </div>
+          <h3>Galería</h3>
+          <p>Sube nuevas fotos del proceso o reemplaza las existentes.</p>
+        </div>
+
+        <div class="overview-card" onclick="goToPage('contacto')">
+          <div class="overview-icon">
+            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Redes sociales</h3>
+          <p>Actualiza los links de Instagram, Facebook, TikTok y WhatsApp.</p>
+        </div>
+
+        <div class="overview-card" onclick="goToPage('qr')">
+          <div class="overview-icon">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3M17 14v3M14 17v3M20 17v4M17 21h4" stroke-linecap="round"/></svg>
+          </div>
+          <h3>Generador de QR</h3>
+          <p>Crea códigos QR del sitio o de cualquier link y descárgalos.</p>
+        </div>
+
+        <div class="overview-card" onclick="showExportModal()">
+          <div class="overview-icon">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Descargar HTML</h3>
+          <p>Genera el archivo <strong>index.html</strong> con todos los cambios listos para subir.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PAGE: HERO ===== -->
+    <div class="page" data-page="hero">
+      <div class="page-head">
+        <div class="page-eyebrow">Sección · Hero</div>
+        <h1 class="page-title">Encabezado <em>principal</em></h1>
+        <p class="page-subtitle">El primer impacto visual del sitio.</p>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Etiqueta superior <span class="hint">(badge)</span></label>
+        <input type="text" class="input" data-field="hero-badge" placeholder="🌱 Innovación sustentable · Hecho en Tamaulipas">
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Título principal <span class="hint">(usa * para palabras en cursiva verde)</span></label>
+        <textarea class="textarea" data-field="hero-title" rows="2" placeholder="Transformando *residuos* en *soluciones* tangibles."></textarea>
+        <p class="help-text">Ejemplo: <code>Transformando *residuos* en *soluciones*</code> → las palabras entre asteriscos se mostrarán en cursiva verde.</p>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Descripción</label>
+        <textarea class="textarea" data-field="hero-description" rows="4"></textarea>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Texto del botón principal</label>
+        <input type="text" class="input" data-field="hero-cta" placeholder="Descubrir el proyecto">
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Texto del sello circular <span class="hint">(usa saltos de línea con Enter)</span></label>
+        <textarea class="textarea" data-field="hero-stamp" rows="4" placeholder="100%&#10;materiales&#10;reciclados&#10;· y biodegradables ·"></textarea>
+      </div>
+    </div>
+
+    <!-- ===== PAGE: NOSOTROS ===== -->
+    <div class="page" data-page="nosotros">
+      <div class="page-head">
+        <div class="page-eyebrow">Sección · Nosotros</div>
+        <h1 class="page-title">Quiénes <em>somos</em></h1>
+        <p class="page-subtitle">La historia y el propósito del proyecto.</p>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Título de la sección <span class="hint">(usa * para cursiva)</span></label>
+        <textarea class="textarea" data-field="nosotros-title" rows="2"></textarea>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Párrafo 1</label>
+        <textarea class="textarea" data-field="nosotros-p1" rows="4"></textarea>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Párrafo 2</label>
+        <textarea class="textarea" data-field="nosotros-p2" rows="4"></textarea>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Párrafo 3</label>
+        <textarea class="textarea" data-field="nosotros-p3" rows="4"></textarea>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Pilares <span class="hint">(las 4 dimensiones del proyecto)</span></label>
+        <div class="field-row">
+          <input type="text" class="input" data-field="pilar1-num" placeholder="Ambiental">
+          <input type="text" class="input" data-field="pilar1-text" placeholder="Reciclaje · Cero plástico">
+        </div>
+        <div class="field-row" style="margin-top: 0.5rem;">
+          <input type="text" class="input" data-field="pilar2-num" placeholder="Económico">
+          <input type="text" class="input" data-field="pilar2-text" placeholder="Costo accesible · Local">
+        </div>
+        <div class="field-row" style="margin-top: 0.5rem;">
+          <input type="text" class="input" data-field="pilar3-num" placeholder="Tecnológico">
+          <input type="text" class="input" data-field="pilar3-text" placeholder="Bioplástico natural">
+        </div>
+        <div class="field-row" style="margin-top: 0.5rem;">
+          <input type="text" class="input" data-field="pilar4-num" placeholder="Social">
+          <input type="text" class="input" data-field="pilar4-text" placeholder="Comunidad · Conciencia">
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Imagen del equipo / proceso</label>
+        <div class="image-upload" onclick="document.getElementById('upload-nosotros').click()">
+          <input type="file" id="upload-nosotros" accept="image/*" onchange="handleImageUpload(event, 'proceso-mezcla.jpg')">
+          <div class="image-preview">
+            <img class="image-preview-thumb" id="thumb-proceso-mezcla.jpg" src="proceso-mezcla.jpg" alt="" onerror="this.style.opacity=0.3">
+            <div class="image-preview-info">
+              <div class="image-preview-name">proceso-mezcla.jpg</div>
+              <div class="image-preview-status" id="status-proceso-mezcla.jpg">Click para cambiar</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PAGE: PRODUCTO ===== -->
+    <div class="page" data-page="producto">
+      <div class="page-head">
+        <div class="page-eyebrow">Sección · Producto</div>
+        <h1 class="page-title">El <em>producto</em></h1>
+        <p class="page-subtitle">Detalles técnicos de la loseta ecológica.</p>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Título del producto <span class="hint">(usa * para cursiva)</span></label>
+        <input type="text" class="input" data-field="producto-title" placeholder="Loseta *ecológica*">
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Descripción corta</label>
+        <textarea class="textarea" data-field="producto-desc" rows="3"></textarea>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Especificaciones</label>
+        <div id="specs-list" class="item-list"></div>
+        <button class="add-button" onclick="addSpec()">
+          <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
+          Agregar especificación
+        </button>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Imagen del producto terminado</label>
+        <div class="image-upload" onclick="document.getElementById('upload-producto').click()">
+          <input type="file" id="upload-producto" accept="image/*" onchange="handleImageUpload(event, 'producto-final.jpg')">
+          <div class="image-preview">
+            <img class="image-preview-thumb" id="thumb-producto-final.jpg" src="producto-final.jpg" alt="" onerror="this.style.opacity=0.3">
+            <div class="image-preview-info">
+              <div class="image-preview-name">producto-final.jpg</div>
+              <div class="image-preview-status" id="status-producto-final.jpg">Click para cambiar</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PAGE: MATERIALES ===== -->
+    <div class="page" data-page="materiales">
+      <div class="page-head">
+        <div class="page-eyebrow">Sección · Materiales</div>
+        <h1 class="page-title">Anatomía de los <em>materiales</em></h1>
+        <p class="page-subtitle">Los ingredientes que componen cada loseta.</p>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Título de la sección</label>
+        <textarea class="textarea" data-field="materiales-title" rows="2"></textarea>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Materiales <span class="hint">(5 tarjetas)</span></label>
+        <div id="materials-list" class="item-list"></div>
+      </div>
+    </div>
+
+    <!-- ===== PAGE: PROCESO ===== -->
+    <div class="page" data-page="proceso">
+      <div class="page-head">
+        <div class="page-eyebrow">Sección · Proceso</div>
+        <h1 class="page-title">Pasos del <em>proceso</em></h1>
+        <p class="page-subtitle">Modifica, agrega o quita los pasos de elaboración.</p>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Pasos del proceso</label>
+        <div id="steps-list" class="item-list"></div>
+        <button class="add-button" onclick="addStep()">
+          <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
+          Agregar paso
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== PAGE: IMPACTO ===== -->
+    <div class="page" data-page="impacto">
+      <div class="page-head">
+        <div class="page-eyebrow">Sección · Impacto</div>
+        <h1 class="page-title">Números de <em>impacto</em></h1>
+        <p class="page-subtitle">Las 4 estadísticas que se muestran con animación.</p>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Tarjetas de impacto</label>
+        <div id="impact-list" class="item-list"></div>
+      </div>
+    </div>
+
+    <!-- ===== PAGE: FODA ===== -->
+    <div class="page" data-page="foda">
+      <div class="page-head">
+        <div class="page-eyebrow">Sección · Análisis FODA</div>
+        <h1 class="page-title">Análisis <em>FODA</em></h1>
+        <p class="page-subtitle">Fortalezas, Oportunidades, Debilidades y Amenazas.</p>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" style="color: var(--green);">⬢ Fortalezas</label>
+        <div id="foda-f-list" class="item-list"></div>
+        <button class="add-button" onclick="addFodaItem('f')">
+          <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
+          Agregar fortaleza
+        </button>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" style="color: var(--green-deep);">⬢ Oportunidades</label>
+        <div id="foda-o-list" class="item-list"></div>
+        <button class="add-button" onclick="addFodaItem('o')">
+          <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
+          Agregar oportunidad
+        </button>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" style="color: var(--earth);">⬢ Debilidades</label>
+        <div id="foda-d-list" class="item-list"></div>
+        <button class="add-button" onclick="addFodaItem('d')">
+          <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
+          Agregar debilidad
+        </button>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" style="color: var(--terracotta);">⬢ Amenazas</label>
+        <div id="foda-a-list" class="item-list"></div>
+        <button class="add-button" onclick="addFodaItem('a')">
+          <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
+          Agregar amenaza
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== PAGE: GALERÍA ===== -->
+    <div class="page" data-page="galeria">
+      <div class="page-head">
+        <div class="page-eyebrow">Sección · Galería</div>
+        <h1 class="page-title">Imágenes de la <em>galería</em></h1>
+        <p class="page-subtitle">Las 5 fotos del proceso que aparecen en la galería.</p>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Foto 1 <span class="hint">(grande, lado izquierdo)</span></label>
+        <input type="text" class="input" data-field="g1-caption" placeholder="Descripción de la foto" style="margin-bottom: 0.6rem;">
+        <div class="image-upload" onclick="document.getElementById('upload-g1').click()">
+          <input type="file" id="upload-g1" accept="image/*" onchange="handleImageUpload(event, 'proceso-vertido.jpg')">
+          <div class="image-preview">
+            <img class="image-preview-thumb" id="thumb-proceso-vertido.jpg" src="proceso-vertido.jpg" alt="" onerror="this.style.opacity=0.3">
+            <div class="image-preview-info">
+              <div class="image-preview-name">proceso-vertido.jpg</div>
+              <div class="image-preview-status" id="status-proceso-vertido.jpg">Click para cambiar</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Foto 2 <span class="hint">(grande, lado derecho)</span></label>
+        <input type="text" class="input" data-field="g2-caption" placeholder="Descripción de la foto" style="margin-bottom: 0.6rem;">
+        <div class="image-upload" onclick="document.getElementById('upload-g2').click()">
+          <input type="file" id="upload-g2" accept="image/*" onchange="handleImageUpload(event, 'proceso-mezcla.jpg', 'g2')">
+          <div class="image-preview">
+            <img class="image-preview-thumb" id="thumb-g2-proceso-mezcla.jpg" src="proceso-mezcla.jpg" alt="" onerror="this.style.opacity=0.3">
+            <div class="image-preview-info">
+              <div class="image-preview-name">proceso-mezcla.jpg</div>
+              <div class="image-preview-status" id="status-g2-proceso-mezcla.jpg">Click para cambiar</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Foto 3</label>
+        <input type="text" class="input" data-field="g3-caption" placeholder="Descripción de la foto" style="margin-bottom: 0.6rem;">
+        <div class="image-upload" onclick="document.getElementById('upload-g3').click()">
+          <input type="file" id="upload-g3" accept="image/*" onchange="handleImageUpload(event, 'proceso-bioplastico.jpg')">
+          <div class="image-preview">
+            <img class="image-preview-thumb" id="thumb-proceso-bioplastico.jpg" src="proceso-bioplastico.jpg" alt="" onerror="this.style.opacity=0.3">
+            <div class="image-preview-info">
+              <div class="image-preview-name">proceso-bioplastico.jpg</div>
+              <div class="image-preview-status" id="status-proceso-bioplastico.jpg">Click para cambiar</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Foto 4</label>
+        <input type="text" class="input" data-field="g4-caption" placeholder="Descripción de la foto" style="margin-bottom: 0.6rem;">
+        <div class="image-upload" onclick="document.getElementById('upload-g4').click()">
+          <input type="file" id="upload-g4" accept="image/*" onchange="handleImageUpload(event, 'proceso-nopal.jpg')">
+          <div class="image-preview">
+            <img class="image-preview-thumb" id="thumb-proceso-nopal.jpg" src="proceso-nopal.jpg" alt="" onerror="this.style.opacity=0.3">
+            <div class="image-preview-info">
+              <div class="image-preview-name">proceso-nopal.jpg</div>
+              <div class="image-preview-status" id="status-proceso-nopal.jpg">Click para cambiar</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Foto 5</label>
+        <input type="text" class="input" data-field="g5-caption" placeholder="Descripción de la foto" style="margin-bottom: 0.6rem;">
+        <div class="image-upload" onclick="document.getElementById('upload-g5').click()">
+          <input type="file" id="upload-g5" accept="image/*" onchange="handleImageUpload(event, 'proceso-tratamiento.jpg')">
+          <div class="image-preview">
+            <img class="image-preview-thumb" id="thumb-proceso-tratamiento.jpg" src="proceso-tratamiento.jpg" alt="" onerror="this.style.opacity=0.3">
+            <div class="image-preview-info">
+              <div class="image-preview-name">proceso-tratamiento.jpg</div>
+              <div class="image-preview-status" id="status-proceso-tratamiento.jpg">Click para cambiar</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PAGE: CONTACTO ===== -->
+    <div class="page" data-page="contacto">
+      <div class="page-head">
+        <div class="page-eyebrow">Sección · Contacto</div>
+        <h1 class="page-title">Datos de <em>contacto</em></h1>
+        <p class="page-subtitle">Información, redes sociales y ubicación.</p>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Correo electrónico</label>
+        <input type="email" class="input" data-field="contact-email" placeholder="bioase.tile@gmail.com">
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Institución</label>
+        <input type="text" class="input" data-field="contact-institution" placeholder="CONALEP · Grupo 612 · 6.º semestre">
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Dirección</label>
+        <input type="text" class="input" data-field="contact-address" placeholder="Av. Las Flores s/n · Nuevo Progreso, Tamaulipas">
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">URL del mapa de Google Maps embebido <span class="hint">(el src del iframe)</span></label>
+        <textarea class="textarea" data-field="contact-map-embed" rows="3" placeholder="https://www.google.com/maps/embed?pb=..."></textarea>
+        <p class="help-text">Para obtenerlo: Google Maps → busca la dirección → Compartir → Insertar un mapa → copia solo el URL que está dentro de <code>src="..."</code></p>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">URL del enlace "Cómo llegar"</label>
+        <input type="text" class="input" data-field="contact-map-link" placeholder="https://www.google.com/maps/search/?api=1&query=...">
+      </div>
+
+      <div class="field-group" style="background: var(--paper-soft);">
+        <label class="field-label">📱 Redes sociales</label>
+        <div style="display: flex; flex-direction: column; gap: 0.8rem; margin-top: 0.5rem;">
+          <div>
+            <label style="font-size: 0.8rem; color: var(--ink-soft); font-weight: 500; display: block; margin-bottom: 0.3rem;">Instagram</label>
+            <input type="text" class="input" data-field="social-instagram" placeholder="https://instagram.com/bioasetile">
+          </div>
+          <div>
+            <label style="font-size: 0.8rem; color: var(--ink-soft); font-weight: 500; display: block; margin-bottom: 0.3rem;">Facebook</label>
+            <input type="text" class="input" data-field="social-facebook" placeholder="https://facebook.com/bioasetile">
+          </div>
+          <div>
+            <label style="font-size: 0.8rem; color: var(--ink-soft); font-weight: 500; display: block; margin-bottom: 0.3rem;">TikTok</label>
+            <input type="text" class="input" data-field="social-tiktok" placeholder="https://tiktok.com/@bioasetile">
+          </div>
+          <div>
+            <label style="font-size: 0.8rem; color: var(--ink-soft); font-weight: 500; display: block; margin-bottom: 0.3rem;">WhatsApp <span style="color: var(--gray-500); font-size: 0.75rem;">(número con código de país, sin +)</span></label>
+            <input type="text" class="input" data-field="social-whatsapp" placeholder="528121234567">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PAGE: LOGO Y VIDEO ===== -->
+    <div class="page" data-page="logo-video">
+      <div class="page-head">
+        <div class="page-eyebrow">Configuración · Branding</div>
+        <h1 class="page-title">Logo y <em>video de fondo</em></h1>
+        <p class="page-subtitle">Cambia el logo de la marca y el video del hero.</p>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Logo de la marca</label>
+        <div class="image-upload" onclick="document.getElementById('upload-logo').click()">
+          <input type="file" id="upload-logo" accept="image/*" onchange="handleImageUpload(event, 'logo.jpg')">
+          <div class="image-preview">
+            <img class="image-preview-thumb" id="thumb-logo.jpg" src="logo.jpg" alt="" onerror="this.style.opacity=0.3">
+            <div class="image-preview-info">
+              <div class="image-preview-name">logo.jpg</div>
+              <div class="image-preview-status" id="status-logo.jpg">Click para cambiar</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">URL del video de fondo del Hero</label>
+        <textarea class="textarea" data-field="hero-video" rows="3" placeholder="https://videos.pexels.com/video-files/..."></textarea>
+        <p class="help-text">Para reemplazarlo: ve a <a href="https://www.pexels.com/videos/" target="_blank" style="color: var(--green);">Pexels Videos</a>, busca uno, descárgalo y copia su URL directa. O usa el URL de un video propio alojado en algún lado.</p>
+      </div>
+    </div>
+
+    <!-- ===== PAGE: QR ===== -->
+    <div class="page" data-page="qr">
+      <div class="page-head">
+        <div class="page-eyebrow">Herramienta</div>
+        <h1 class="page-title">Generador de <em>códigos QR</em></h1>
+        <p class="page-subtitle">Crea códigos QR del sitio o de cualquier link y descárgalos en alta calidad.</p>
+      </div>
+
+      <div class="qr-section">
+        <div id="qrcode-preview"></div>
+        <div class="qr-controls">
+          <input type="text" id="qrUrlInput" class="input" placeholder="https://tu-sitio.com" value="https://bioasetile.github.io/bioase-tile/">
+          <button class="btn btn-primary" onclick="generateQRCode()" style="white-space: nowrap;">
+            <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;"><path d="M3 12h18M12 3v18" stroke-linecap="round"/></svg>
+            Generar
+          </button>
+        </div>
+        <button class="btn btn-secondary" onclick="downloadQRCode()" style="margin-top: 0.5rem;">
+          <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Descargar PNG
+        </button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ============================== -->
+<!--   MODAL DE EXPORTAR            -->
+<!-- ============================== -->
+<div class="modal-backdrop" id="exportModal">
+  <div class="modal">
+    <h2>📥 Descargar HTML actualizado</h2>
+    <p>Voy a generar el archivo <strong>index.html</strong> con todos tus cambios. Luego sigue estos pasos:</p>
+    <div class="modal-steps">
+      <ol>
+        <li>Ve a tu repositorio en <strong>GitHub</strong></li>
+        <li>Click en el archivo <strong>index.html</strong></li>
+        <li>Click en el ícono del lápiz (Editar) — o sube el archivo nuevo directamente</li>
+        <li>Pega el contenido o sube el archivo descargado</li>
+        <li>Commit changes → ¡listo!</li>
+      </ol>
+    </div>
+    <p style="font-size: 0.85rem; color: var(--gray-500);">⚠️ Si cambiaste imágenes, también necesitas subirlas al repositorio con sus nombres originales.</p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" style="border-color: var(--gray-300); color: var(--ink-soft);" onclick="closeModal('exportModal')">Cancelar</button>
+      <button class="btn btn-primary" onclick="exportHTML()">Descargar ahora</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== -->
+<!--   TOAST                        -->
+<!-- ============================== -->
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <span id="toast-msg">Guardado</span>
+</div>
+
+<script>
+// =============================================
+//   DEFAULT DATA — los valores iniciales
+// =============================================
+const DEFAULTS = {
+  'hero-badge': '🌱 Innovación sustentable · Hecho en Tamaulipas',
+  'hero-title': 'Transformando *residuos* en *soluciones* tangibles.',
+  'hero-description': 'BioAse Tile fabrica **losetas ecológicas** a partir de aserrín, pulpa de papel reciclado y bioplástico natural. Una alternativa real al concreto y la cerámica — hecha en Nuevo Progreso, Tamaulipas, con materiales que la naturaleza ya nos dio.',
+  'hero-cta': 'Descubrir el proyecto',
+  'hero-stamp': '100%\nmateriales\nreciclados\n· y biodegradables ·',
+  'hero-video': 'https://videos.pexels.com/video-files/34522518/14626918_1440_2560_60fps.mp4',
+
+  'nosotros-title': 'Un emprendimiento que *transforma* la idea de construir.',
+  'nosotros-p1': 'BioAse Tile nace como respuesta a dos problemas simultáneos: el alto impacto ambiental de los materiales tradicionales como el concreto y la cerámica, y la enorme acumulación de residuos orgánicos que terminan en rellenos sanitarios sin ser aprovechados.',
+  'nosotros-p2': 'Nuestra propuesta combina aserrín, pulpa de papel reciclado, fibras de cáscara de fruta y un bioplástico natural elaborado con fécula de maíz y baba de nopal. El resultado: losetas ligeras, resistentes, y con una estética artesanal única.',
+  'nosotros-p3': 'Somos un emprendimiento con cuatro dimensiones que conviven en cada loseta producida.',
+
+  'pilar1-num': 'Ambiental', 'pilar1-text': 'Reciclaje · Cero plástico',
+  'pilar2-num': 'Económico', 'pilar2-text': 'Costo accesible · Local',
+  'pilar3-num': 'Tecnológico', 'pilar3-text': 'Bioplástico natural',
+  'pilar4-num': 'Social', 'pilar4-text': 'Comunidad · Conciencia',
+
+  'producto-title': 'Loseta *ecológica*',
+  'producto-desc': 'Loseta fabricada integralmente con residuos orgánicos y materiales reciclados. Acabado granulado natural, sellada con cera de abeja, ideal para jardines y espacios sociales.',
+
+  'materiales-title': 'Naturaleza pura, *nada más*.\nCada loseta, una *receta*.',
+
+  'g1-caption': '01 · Bioplástico vertido sobre aserrín',
+  'g2-caption': '02 · Mezcla del biocompuesto',
+  'g3-caption': '03 · Cocción del bioplástico',
+  'g4-caption': '04 · Baba de nopal',
+  'g5-caption': '05 · Tratamiento manual',
+
+  'contact-email': 'bioase.tile@gmail.com',
+  'contact-institution': 'CONALEP · Grupo 612 · 6.º semestre',
+  'contact-address': 'Av. Las Flores s/n · Nuevo Progreso, Tamaulipas',
+  'contact-map-embed': 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3589.6!2d-97.9533!3d26.0658!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjbCsDAzJzU3LjAiTiA5N8KwNTcnMTIuMCJX!5e0!3m2!1ses!2smx!4v1700000000000!5m2!1ses!2smx',
+  'contact-map-link': 'https://www.google.com/maps/search/?api=1&query=Av.+Las+Flores+Nuevo+Progreso+Tamaulipas',
+
+  'social-instagram': '#',
+  'social-facebook': '#',
+  'social-tiktok': '#',
+  'social-whatsapp': '520000000000',
+};
+
+const DEFAULT_SPECS = [
+  { key: 'Material', value: 'Aserrín + bioplástico natural' },
+  { key: 'Acabado', value: 'Granulado natural, tonos profundos' },
+  { key: 'Peso', value: 'Ligera · fácil de instalar' },
+  { key: 'Sellado', value: 'Cera de abeja + aceite vegetal' },
+  { key: 'Curado', value: '5 a 7 días al aire libre' },
+  { key: 'Ideal para', value: 'Jardines, áreas peatonales, terrazas, escuelas' }
+];
+
+const DEFAULT_MATERIALS = [
+  { amount: '450 g · ingrediente principal', name: '*Aserrín*', role: 'Subproducto de carpinterías locales. Aporta cuerpo, textura y absorción. Tratado con cal para eliminar microorganismos antes de mezclarse.' },
+  { amount: '150 g', name: 'Pulpa de *papel*', role: 'Da estructura interna y reduce el peso.' },
+  { amount: '80 g', name: 'Fibra de *fruta*', role: 'Refuerzo natural contra fracturas.' },
+  { amount: 'Bioplástico · ligante', name: '*Fécula* + *nopal*', role: 'Gel natural de fécula de maíz, vinagre, glicerina y baba de nopal. Reemplaza al plástico convencional.' },
+  { amount: 'Capa final · impermeabilización', name: '*Cera de abeja* & *aceite*', role: 'Doble capa de sellado natural aplicada en caliente. Protege contra humedad, hongos y desgaste — sin químicos sintéticos.' }
+];
+
+const DEFAULT_STEPS = [
+  { time: 'Día 0 · 24 hrs', title: 'Tratamiento de materiales', desc: 'El aserrín y las fibras de cáscara de fruta se sumergen en agua con cal durante 12 a 24 horas para eliminar microorganismos y mejorar la durabilidad. Luego se escurren y se secan al sol.', chips: '1 L agua, 2 cdas cal, 12–24 hrs reposo' },
+  { time: 'Día 1 · 40 min', title: 'Bioplástico natural', desc: 'Se cocina fécula de maíz con agua, vinagre, glicerina y sal hasta formar un gel espeso. Al final se incorpora baba de nopal, que mejora la adhesión y elasticidad del biocompuesto.', chips: '500 ml agua, 120 g fécula, 25 ml vinagre, 60 ml nopal' },
+  { time: 'Día 1 · 20 min', title: 'Mezcla del biocompuesto', desc: 'Se combinan los sólidos secos con el bioplástico caliente. Se trabaja la mezcla hasta lograr una masa uniforme, espesa y moldeable. Aquí nace la loseta.', chips: '450 g aserrín, 150 g pulpa, 80 g fibras' },
+  { time: 'Día 1 · 15 min', title: 'Moldeado y compactación', desc: 'La mezcla se vacía en el molde y se compacta con fuerza para eliminar burbujas de aire. La compactación define la resistencia final de la pieza.', chips: '' },
+  { time: 'Días 2–7 · curado', title: 'Secado y curado controlado', desc: 'La loseta se coloca sobre una rejilla, en un lugar ventilado y con sombra. Se voltea cada 12 horas durante los primeros 3 días para secado uniforme.', chips: '' },
+  { time: 'Día 3 · prevención', title: 'Prevención de humedad', desc: 'Se aplica una mezcla 1:1 de agua y vinagre sobre la superficie para inhibir el crecimiento de hongos durante el resto del secado.', chips: '' },
+  { time: 'Día 7 · sellado', title: 'Impermeabilización final', desc: 'Se aplica una capa caliente de cera de abeja derretida con aceite vegetal, se deja reposar 12 horas, y se aplica una segunda capa. La loseta queda lista para enfrentar el clima.', chips: '40 g cera de abeja, 15 ml aceite, 2 capas' }
+];
+
+const DEFAULT_IMPACT = [
+  { num: '100', unit: '%', label: 'Materiales reciclados', desc: 'Aserrín, pulpa de papel y fibras de fruta rescatados del desperdicio.' },
+  { num: '0', unit: 'g plástico', label: 'Plástico convencional', desc: 'El bioplástico de fécula de maíz reemplaza por completo al sintético.' },
+  { num: '11', unit: '', label: 'Ingredientes naturales', desc: 'Aserrín, pulpa, fibras, fécula, vinagre, sal, glicerina, nopal, cera, aceite, agua.' },
+  { num: '7', unit: 'días', label: 'Curado natural', desc: 'Sin hornos industriales, sin químicos. Solo aire, tiempo y atención.' }
+];
+
+const DEFAULT_FODA = {
+  f: ['Producto 100% ecológico, hecho con materiales reciclados', 'Bajo costo de producción frente a la loseta tradicional', 'Proceso accesible y adaptable a producción artesanal', 'Ligera, fácil de transportar e instalar', 'Genera conciencia ambiental en la comunidad'],
+  o: ['Crecimiento del mercado de productos ecológicos', 'Expansión potencial a escuelas y espacios públicos', 'Alianzas con carpinterías, recicladoras y constructoras', 'Posicionamiento como referente local de innovación', 'Tendencia mundial hacia la reutilización de residuos'],
+  d: ['Tiempo de curado más largo que productos industriales', 'Producción inicial limitada', 'Falta de maquinaria industrial especializada', 'Necesita pruebas constantes para mejorar resistencia', 'Posible desconocimiento del producto en el mercado'],
+  a: ['Competencia con concreto y cerámica ya posicionados', 'Variación en precio de materias primas', 'Condiciones climáticas que afectan el secado', 'Posible aparición de competidores ecológicos']
+};
+
+// =============================================
+//   STATE — persistido en localStorage
+// =============================================
+let state = loadState();
+
+function loadState() {
+  try {
+    const stored = localStorage.getItem('bioase_dashboard');
+    if (stored) return JSON.parse(stored);
+  } catch(e) {}
+  return {
+    fields: { ...DEFAULTS },
+    specs: [...DEFAULT_SPECS],
+    materials: [...DEFAULT_MATERIALS],
+    steps: [...DEFAULT_STEPS],
+    impact: [...DEFAULT_IMPACT],
+    foda: JSON.parse(JSON.stringify(DEFAULT_FODA)),
+    images: {} // base64 data URLs por nombre de archivo
+  };
+}
+
+function saveState() {
+  try {
+    localStorage.setItem('bioase_dashboard', JSON.stringify(state));
+  } catch(e) {
+    showToast('⚠️ Espacio agotado en el navegador');
+  }
+}
+
+// =============================================
+//   NAVIGATION
+// =============================================
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', () => goToPage(item.dataset.page));
+});
+
+function goToPage(pageName) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.page === pageName));
+  document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.dataset.page === pageName));
+  document.querySelector('main').scrollTop = 0;
+  closeSidebarOnMobile();
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+function closeSidebarOnMobile() {
+  if (window.innerWidth <= 880) document.getElementById('sidebar').classList.remove('open');
+}
+
+// =============================================
+//   FIELD BINDINGS
+// =============================================
+function bindFields() {
+  document.querySelectorAll('[data-field]').forEach(el => {
+    const field = el.dataset.field;
+    el.value = state.fields[field] ?? '';
+    el.addEventListener('input', () => {
+      state.fields[field] = el.value;
+      saveState();
+    });
+  });
+}
+
+// =============================================
+//   IMAGE UPLOAD
+// =============================================
+function handleImageUpload(event, targetFilename, scope) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    state.images[targetFilename] = e.target.result;
+    saveState();
+
+    const thumbId = scope ? `thumb-${scope}-${targetFilename}` : `thumb-${targetFilename}`;
+    const statusId = scope ? `status-${scope}-${targetFilename}` : `status-${targetFilename}`;
+
+    document.querySelectorAll(`[id^="thumb-"][id$="${targetFilename}"]`).forEach(img => {
+      img.src = e.target.result;
+      img.style.opacity = 1;
+    });
+    document.querySelectorAll(`[id^="status-"][id$="${targetFilename}"]`).forEach(status => {
+      status.textContent = '✓ Modificada · se descargará con el sitio';
+      status.classList.add('changed');
+    });
+
+    showToast('Imagen cargada');
+  };
+  reader.readAsDataURL(file);
+}
+
+// =============================================
+//   DYNAMIC LISTS — Specs
+// =============================================
+function renderSpecs() {
+  const list = document.getElementById('specs-list');
+  list.innerHTML = '';
+  state.specs.forEach((spec, i) => {
+    const card = document.createElement('div');
+    card.className = 'item-card';
+    card.innerHTML = `
+      <div class="item-card-header">
+        <span class="item-card-num">Especificación ${i+1}</span>
+        <div class="item-card-actions">
+          <button class="icon-btn" onclick="moveSpec(${i}, -1)" ${i===0?'disabled':''} title="Subir"><svg viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button class="icon-btn" onclick="moveSpec(${i}, 1)" ${i===state.specs.length-1?'disabled':''} title="Bajar"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button class="icon-btn danger" onclick="removeSpec(${i})" title="Eliminar"><svg viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        </div>
+      </div>
+      <div class="field-row">
+        <input type="text" class="input" placeholder="Etiqueta" value="${escapeHtml(spec.key)}" oninput="state.specs[${i}].key = this.value; saveState();">
+        <input type="text" class="input" placeholder="Valor" value="${escapeHtml(spec.value)}" oninput="state.specs[${i}].value = this.value; saveState();">
+      </div>
+    `;
+    list.appendChild(card);
+  });
+}
+
+function addSpec() {
+  state.specs.push({ key: 'Nueva etiqueta', value: 'Valor' });
+  saveState();
+  renderSpecs();
+}
+
+function removeSpec(i) {
+  if (!confirm('¿Eliminar esta especificación?')) return;
+  state.specs.splice(i, 1);
+  saveState();
+  renderSpecs();
+}
+
+function moveSpec(i, dir) {
+  const newIdx = i + dir;
+  if (newIdx < 0 || newIdx >= state.specs.length) return;
+  [state.specs[i], state.specs[newIdx]] = [state.specs[newIdx], state.specs[i]];
+  saveState();
+  renderSpecs();
+}
+
+// =============================================
+//   DYNAMIC LISTS — Materials
+// =============================================
+function renderMaterials() {
+  const list = document.getElementById('materials-list');
+  list.innerHTML = '';
+  state.materials.forEach((mat, i) => {
+    const card = document.createElement('div');
+    card.className = 'item-card';
+    card.innerHTML = `
+      <div class="item-card-header">
+        <span class="item-card-num">Material ${i+1}</span>
+      </div>
+      <input type="text" class="input" placeholder="Cantidad / rol" value="${escapeHtml(mat.amount)}" oninput="state.materials[${i}].amount = this.value; saveState();" style="margin-bottom: 0.5rem;">
+      <input type="text" class="input" placeholder="Nombre (usa * para cursiva)" value="${escapeHtml(mat.name)}" oninput="state.materials[${i}].name = this.value; saveState();" style="margin-bottom: 0.5rem;">
+      <textarea class="textarea" placeholder="Descripción" rows="2" oninput="state.materials[${i}].role = this.value; saveState();">${escapeHtml(mat.role)}</textarea>
+    `;
+    list.appendChild(card);
+  });
+}
+
+// =============================================
+//   DYNAMIC LISTS — Steps
+// =============================================
+function renderSteps() {
+  const list = document.getElementById('steps-list');
+  list.innerHTML = '';
+  state.steps.forEach((step, i) => {
+    const card = document.createElement('div');
+    card.className = 'item-card';
+    card.innerHTML = `
+      <div class="item-card-header">
+        <span class="item-card-num">Paso ${String(i+1).padStart(2, '0')}</span>
+        <div class="item-card-actions">
+          <button class="icon-btn" onclick="moveStep(${i}, -1)" ${i===0?'disabled':''} title="Subir"><svg viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button class="icon-btn" onclick="moveStep(${i}, 1)" ${i===state.steps.length-1?'disabled':''} title="Bajar"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button class="icon-btn danger" onclick="removeStep(${i})" title="Eliminar"><svg viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        </div>
+      </div>
+      <input type="text" class="input" placeholder="Tiempo (ej: Día 1 · 40 min)" value="${escapeHtml(step.time)}" oninput="state.steps[${i}].time = this.value; saveState();" style="margin-bottom: 0.5rem;">
+      <input type="text" class="input" placeholder="Título del paso" value="${escapeHtml(step.title)}" oninput="state.steps[${i}].title = this.value; saveState();" style="margin-bottom: 0.5rem;">
+      <textarea class="textarea" placeholder="Descripción detallada" rows="2" oninput="state.steps[${i}].desc = this.value; saveState();" style="margin-bottom: 0.5rem;">${escapeHtml(step.desc)}</textarea>
+      <input type="text" class="input" placeholder="Chips de receta separados por coma (opcional)" value="${escapeHtml(step.chips)}" oninput="state.steps[${i}].chips = this.value; saveState();">
+    `;
+    list.appendChild(card);
+  });
+}
+
+function addStep() {
+  state.steps.push({ time: 'Tiempo', title: 'Nuevo paso', desc: 'Descripción del paso', chips: '' });
+  saveState();
+  renderSteps();
+}
+
+function removeStep(i) {
+  if (!confirm('¿Eliminar este paso?')) return;
+  state.steps.splice(i, 1);
+  saveState();
+  renderSteps();
+}
+
+function moveStep(i, dir) {
+  const newIdx = i + dir;
+  if (newIdx < 0 || newIdx >= state.steps.length) return;
+  [state.steps[i], state.steps[newIdx]] = [state.steps[newIdx], state.steps[i]];
+  saveState();
+  renderSteps();
+}
+
+// =============================================
+//   DYNAMIC LISTS — Impact
+// =============================================
+function renderImpact() {
+  const list = document.getElementById('impact-list');
+  list.innerHTML = '';
+  state.impact.forEach((card, i) => {
+    const el = document.createElement('div');
+    el.className = 'item-card';
+    el.innerHTML = `
+      <div class="item-card-header">
+        <span class="item-card-num">Tarjeta ${i+1}</span>
+      </div>
+      <div class="field-row three">
+        <input type="text" class="input" placeholder="Número" value="${escapeHtml(card.num)}" oninput="state.impact[${i}].num = this.value; saveState();">
+        <input type="text" class="input" placeholder="Unidad (ej: %)" value="${escapeHtml(card.unit)}" oninput="state.impact[${i}].unit = this.value; saveState();">
+        <input type="text" class="input" placeholder="Etiqueta" value="${escapeHtml(card.label)}" oninput="state.impact[${i}].label = this.value; saveState();">
+      </div>
+      <textarea class="textarea" placeholder="Descripción" rows="2" oninput="state.impact[${i}].desc = this.value; saveState();" style="margin-top: 0.5rem;">${escapeHtml(card.desc)}</textarea>
+    `;
+    list.appendChild(el);
+  });
+}
+
+// =============================================
+//   DYNAMIC LISTS — FODA
+// =============================================
+function renderFoda(letter) {
+  const list = document.getElementById(`foda-${letter}-list`);
+  list.innerHTML = '';
+  state.foda[letter].forEach((item, i) => {
+    const el = document.createElement('div');
+    el.className = 'item-card';
+    el.style.padding = '0.7rem 1rem';
+    el.innerHTML = `
+      <div style="display: flex; gap: 0.5rem; align-items: center;">
+        <input type="text" class="input" value="${escapeHtml(item)}" oninput="state.foda.${letter}[${i}] = this.value; saveState();" style="flex: 1;">
+        <button class="icon-btn danger" onclick="removeFodaItem('${letter}', ${i})" title="Eliminar"><svg viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+    `;
+    list.appendChild(el);
+  });
+}
+
+function addFodaItem(letter) {
+  state.foda[letter].push('Nuevo elemento');
+  saveState();
+  renderFoda(letter);
+}
+
+function removeFodaItem(letter, i) {
+  if (!confirm('¿Eliminar este elemento?')) return;
+  state.foda[letter].splice(i, 1);
+  saveState();
+  renderFoda(letter);
+}
+
+// =============================================
+//   QR GENERATOR
+// =============================================
+let currentQr;
+function generateQRCode() {
+  const url = document.getElementById('qrUrlInput').value.trim();
+  if (!url) { showToast('⚠️ Escribe una URL primero'); return; }
+  const container = document.getElementById('qrcode-preview');
+  container.innerHTML = '';
+  currentQr = new QRCode(container, {
+    text: url,
+    width: 240,
+    height: 240,
+    colorDark: '#1A1F12',
+    colorLight: '#FFFFFF',
+    correctLevel: QRCode.CorrectLevel.H
+  });
+  showToast('QR generado');
+}
+
+function downloadQRCode() {
+  const container = document.getElementById('qrcode-preview');
+  const img = container.querySelector('img');
+  const canvas = container.querySelector('canvas');
+  let dataURL;
+  if (img && img.src) dataURL = img.src;
+  else if (canvas) dataURL = canvas.toDataURL('image/png');
+  else { showToast('⚠️ Genera un QR primero'); return; }
+  const a = document.createElement('a');
+  a.href = dataURL;
+  a.download = 'bioase-tile-qr.png';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  showToast('QR descargado');
+}
+
+// =============================================
+//   TOAST & MODALS
+// =============================================
+function showToast(msg) {
+  document.getElementById('toast-msg').textContent = msg;
+  const toast = document.getElementById('toast');
+  toast.classList.add('show');
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => toast.classList.remove('show'), 2200);
+}
+
+function showExportModal() {
+  document.getElementById('exportModal').classList.add('show');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('show');
+}
+
+document.getElementById('exportModal').addEventListener('click', (e) => {
+  if (e.target.id === 'exportModal') closeModal('exportModal');
+});
+
+// =============================================
+//   RESET
+// =============================================
+function resetAll() {
+  if (!confirm('¿Restablecer TODO el contenido a los valores originales? Esto borrará todos tus cambios.')) return;
+  localStorage.removeItem('bioase_dashboard');
+  location.reload();
+}
+
+// =============================================
+//   HELPERS
+// =============================================
+function escapeHtml(text) {
+  if (!text) return '';
+  return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function formatItalics(text) {
+  // Convierte *palabra* → <em>palabra</em> para usar en el HTML exportado
+  return text.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+}
+
+function formatBold(text) {
+  // Convierte **palabra** → <strong>palabra</strong>
+  return text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+}
+
+// =============================================
+//   EXPORT HTML — el corazón del dashboard
+// =============================================
+async function exportHTML() {
+  closeModal('exportModal');
+  showToast('Generando HTML...');
+
+  try {
+    // Descarga el index.html actual para usar como template
+    const response = await fetch('index.html');
+    if (!response.ok) throw new Error('No se pudo leer index.html');
+    let html = await response.text();
+
+    // ============ APLICAR CAMBIOS ============
+    const f = state.fields;
+
+    // HERO
+    html = replaceInRange(html, 'class="hero-badge fade-in"', '</span>', `<span class="hero-badge fade-in">${escapeHtml(f['hero-badge'])}</span>`);
+
+    // Hero title: dividir por espacios manteniendo asteriscos
+    const titleWords = f['hero-title'].split(/\s+/).map((w, i) => {
+      const cls = `word w${i+1}`;
+      const formatted = formatItalics(w);
+      return `<span class="${cls}">${formatted}</span>`;
+    }).join('\n      ');
+    html = replaceBlock(html, /<h1>[\s\S]*?<\/h1>/, `<h1>\n      ${titleWords}\n    </h1>`);
+
+    // Hero description
+    html = replaceBlock(html, /<p class="hero-description">[\s\S]*?<\/p>/, `<p class="hero-description">\n        ${formatBold(escapeHtml(f['hero-description']).replace(/&lt;strong&gt;/g, '<strong>').replace(/&lt;\/strong&gt;/g, '</strong>'))}\n      </p>`);
+
+    // Hero CTA
+    html = html.replace(/(<a href="#producto" class="hero-cta">\s*<span>)[^<]+(<\/span>)/, `$1${escapeHtml(f['hero-cta'])}$2`);
+
+    // Hero stamp
+    const stampHtml = escapeHtml(f['hero-stamp']).replace(/\n/g, '<br>');
+    html = replaceBlock(html, /<div class="hero-stamp">[\s\S]*?<\/div>/, `<div class="hero-stamp">\n          ${stampHtml}\n        </div>`);
+
+    // Hero video
+    html = html.replace(/(<video class="hero-video"[\s\S]*?<source src=")[^"]+(")/, `$1${f['hero-video']}$2`);
+
+    // NOSOTROS title
+    const nosotrosTitleHtml = formatItalics(escapeHtml(f['nosotros-title']));
+    html = html.replace(/(<h2 class="section-title reveal delay-1">\s*)[^<]*((?:<em>[^<]*<\/em>[^<]*)*\s*<\/h2>)/, (match) => {
+      // Replace only the first occurrence (which is the nosotros title)
+      return match.replace(/(<h2 class="section-title reveal delay-1">\s*)[\s\S]*?(\s*<\/h2>)/, `$1${nosotrosTitleHtml}$2`);
+    });
+
+    // Nosotros paragraphs - by position
+    const nosotrosParas = [f['nosotros-p1'], f['nosotros-p2'], f['nosotros-p3']];
+    let paraIdx = 0;
+    html = html.replace(/(<div class="nosotros-text reveal delay-2">\s*)([\s\S]*?)(\s*<div class="nosotros-pillars">)/, (match, before, content, after) => {
+      const newContent = `<p>${escapeHtml(nosotrosParas[0])}</p>\n      <p>${escapeHtml(nosotrosParas[1])}</p>\n      <p>${escapeHtml(nosotrosParas[2])}</p>\n      `;
+      return before + newContent + after;
+    });
+
+    // Pilares
+    for (let i = 1; i <= 4; i++) {
+      const numPattern = new RegExp(`(<div class="pillar-num">)[^<]+(<\\/div>)`, 'g');
+      const textPattern = new RegExp(`(<div class="pillar-text">)[^<]+(<\\/div>)`, 'g');
+    }
+    // Replace pilares por posición usando split
+    const pillarRegex = /<div class="pillar">\s*<div class="pillar-num">([^<]+)<\/div>\s*<div class="pillar-text">([^<]+)<\/div>\s*<\/div>/g;
+    let pillarCount = 0;
+    html = html.replace(pillarRegex, () => {
+      pillarCount++;
+      return `<div class="pillar">\n          <div class="pillar-num">${escapeHtml(f[`pilar${pillarCount}-num`])}</div>\n          <div class="pillar-text">${escapeHtml(f[`pilar${pillarCount}-text`])}</div>\n        </div>`;
+    });
+
+    // PRODUCTO
+    html = html.replace(/(<h2>)Loseta[\s\S]*?(<\/h2>)/, `$1${formatItalics(escapeHtml(f['producto-title']))}$2`);
+    html = html.replace(/(<div class="producto-content reveal delay-2">[\s\S]*?<h2>[\s\S]*?<\/h2>\s*<p>\s*)[\s\S]*?(\s*<\/p>)/, `$1${escapeHtml(f['producto-desc'])}$2`);
+
+    // SPECS
+    const specsHtml = state.specs.map(s => `        <li>
+          <span class="spec-key">${escapeHtml(s.key)}</span>
+          <span class="spec-val">${formatSpecVal(s.value)}</span>
+        </li>`).join('\n');
+    html = html.replace(/<ul class="specs">[\s\S]*?<\/ul>/, `<ul class="specs">\n${specsHtml}\n      </ul>`);
+
+    // MATERIALES title
+    const matTitleHtml = formatItalics(escapeHtml(f['materiales-title']).replace(/\n/g, '<br>'));
+    html = html.replace(/(<div class="section-number reveal">03 \/ Anatomía<\/div>\s*<\/div>\s*<div class="nosotros-body">|<div class="section-number reveal">03 \/ Anatomía<\/div>)[\s\S]*?<\/h2>/, (match) => {
+      return match.replace(/<h2[^>]*>[\s\S]*?<\/h2>/, `<h2 class="section-title reveal delay-1">\n      ${matTitleHtml}\n    </h2>`);
+    });
+
+    // MATERIALS — replace anatomy-grid content
+    const matClasses = ['primary', 'secondary', 'tertiary', 'binder', 'sealer'];
+    const matDelays = ['', ' delay-1', ' delay-2', ' delay-3', ' delay-4'];
+    const matsHtml = state.materials.map((m, i) => {
+      const cls = matClasses[i] || 'secondary';
+      const delay = matDelays[i] || '';
+      return `    <div class="material-card ${cls} reveal${delay}">
+      <div class="material-amount">${escapeHtml(m.amount)}</div>
+      <h3 class="material-name">${formatItalics(escapeHtml(m.name))}</h3>
+      <p class="material-role">
+        ${escapeHtml(m.role)}
+      </p>
+    </div>`;
+    }).join('\n\n');
+    html = html.replace(/<div class="anatomy-grid">[\s\S]*?<\/div>\s*<\/section>/, `<div class="anatomy-grid">\n${matsHtml}\n  </div>\n</section>`);
+
+    // STEPS
+    const stepsHtml = state.steps.map((s, i) => {
+      const num = String(i+1).padStart(2, '0');
+      const chipsHtml = s.chips ? `\n          <div class="step-recipe">
+${s.chips.split(',').map(c => `            <span class="recipe-chip">${escapeHtml(c.trim())}</span>`).join('\n')}
+          </div>` : '';
+      return `      <div class="step reveal">
+        <div class="step-meta">
+          <div class="step-num">${num}</div>
+          <div class="step-time">${escapeHtml(s.time)}</div>
+        </div>
+        <div class="step-content">
+          <h3>${escapeHtml(s.title)}</h3>
+          <p>
+            ${escapeHtml(s.desc)}
+          </p>${chipsHtml}
+        </div>
+      </div>`;
+    }).join('\n\n');
+    html = html.replace(/<div class="timeline">[\s\S]*?<\/div>\s*<\/div>\s*<\/section>/, `<div class="timeline">\n${stepsHtml}\n    </div>\n  </div>\n</section>`);
+
+    // IMPACT
+    const impactHtml = state.impact.map((imp, i) => {
+      const delay = i > 0 ? ` delay-${i}` : '';
+      const unitHtml = imp.unit ? `<span class="unit">${escapeHtml(imp.unit)}</span>` : '';
+      return `    <div class="impacto-card reveal${delay}">
+      <div class="num"><span class="counter" data-target="${escapeHtml(imp.num)}">0</span>${unitHtml}</div>
+      <div class="label">${escapeHtml(imp.label)}</div>
+      <p class="desc">${escapeHtml(imp.desc)}</p>
+    </div>`;
+    }).join('\n');
+    html = html.replace(/<div class="impacto-grid">[\s\S]*?<\/div>\s*<\/section>/, `<div class="impacto-grid">\n${impactHtml}\n  </div>\n</section>`);
+
+    // FODA
+    const fodaLetters = { f: 'Fortalezas', o: 'Oportunidades', d: 'Debilidades', a: 'Amenazas' };
+    const fodaClasses = { f: '', o: ' opportunity', d: ' weakness', a: ' threat' };
+    const fodaDelays = { f: '', o: ' delay-1', d: ' delay-2', a: ' delay-3' };
+    const fodaCardsHtml = ['f', 'o', 'd', 'a'].map(letter => {
+      const items = state.foda[letter].map(item => `          <li>${escapeHtml(item)}</li>`).join('\n');
+      return `      <div class="foda-card${fodaClasses[letter]} reveal${fodaDelays[letter]}">
+        <div class="foda-letter">${letter.toUpperCase()}</div>
+        <h3>${fodaLetters[letter]}</h3>
+        <ul class="foda-list">
+${items}
+        </ul>
+      </div>`;
+    }).join('\n\n');
+    html = html.replace(/<div class="foda-grid">[\s\S]*?<\/div>\s*<\/div>\s*<\/section>/, `<div class="foda-grid">\n${fodaCardsHtml}\n    </div>\n  </div>\n</section>`);
+
+    // GALERÍA - captions
+    const captions = [f['g1-caption'], f['g2-caption'], f['g3-caption'], f['g4-caption'], f['g5-caption']];
+    let capIdx = 0;
+    html = html.replace(/(<span class="caption">)[^<]*(<\/span>)/g, (match, p1, p2) => {
+      return capIdx < 5 ? p1 + escapeHtml(captions[capIdx++]) + p2 : match;
+    });
+
+    // CONTACTO
+    html = html.replace(/(mailto:)[^"]+"/g, `$1${f['contact-email']}"`);
+    html = html.replace(/(<a href="mailto:[^"]+">)[^<]+(<\/a>)/, `$1${escapeHtml(f['contact-email'])}$2`);
+    html = html.replace(/(<span class="contact-label">Institución<\/span>\s*<\/div>\s*<div class="contact-text">\s*<span class="contact-label">Institución<\/span>\s*<span>)[^<]+(<\/span>)/, `$1${escapeHtml(f['contact-institution'])}$2`);
+    // Más simple: reemplazar el contenido del contact-text de Institución
+    html = html.replace(/(<div class="contact-text">\s*<span class="contact-label">Institución<\/span>\s*<span>)[^<]+(<\/span>\s*<\/div>)/, `$1${escapeHtml(f['contact-institution'])}$2`);
+
+    // Dirección del mapa overlay
+    html = html.replace(/(<div class="location-map-address">)[^<]+(<\/div>)/, `$1${escapeHtml(f['contact-address'])}$2`);
+    // iframe src
+    html = html.replace(/(<iframe\s+src=")[^"]+(")/, `$1${f['contact-map-embed']}$2`);
+    // map link
+    html = html.replace(/(href=")[^"]*\?api=1[^"]+(" target="_blank" rel="noopener" class="location-map-btn")/, `$1${f['contact-map-link']}$2`);
+
+    // SOCIAL LINKS
+    const socials = {
+      'Instagram': f['social-instagram'],
+      'Facebook': f['social-facebook'],
+      'TikTok': f['social-tiktok']
+    };
+    Object.entries(socials).forEach(([net, url]) => {
+      const regex = new RegExp(`(<a href=")[^"]+(" class="social-link" aria-label="${net}")`, 'g');
+      html = html.replace(regex, `$1${url || '#'}$2`);
+    });
+    // WhatsApp es especial
+    html = html.replace(/(href="https:\/\/wa\.me\/)[^"]+(" class="social-link" aria-label="WhatsApp")/, `$1${f['social-whatsapp']}$2`);
+
+    // LOGO favicon
+    // No es necesario cambiar nada del HTML para el logo si solo es la imagen
+
+    // ============ DESCARGAR ============
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'index.html';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    // ============ DESCARGAR IMÁGENES MODIFICADAS ============
+    const modifiedImages = Object.keys(state.images);
+    if (modifiedImages.length > 0) {
+      setTimeout(() => {
+        modifiedImages.forEach((filename, idx) => {
+          setTimeout(() => {
+            const link = document.createElement('a');
+            link.href = state.images[filename];
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          }, idx * 400);
+        });
+        showToast(`✓ index.html + ${modifiedImages.length} imágenes descargadas`);
+      }, 600);
+    } else {
+      showToast('✓ index.html descargado');
+    }
+
+  } catch(err) {
+    console.error(err);
+    showToast('⚠️ Error: asegúrate de que index.html esté en la misma carpeta');
+  }
+}
+
+function formatSpecVal(text) {
+  // Convierte ciertos patrones para mantener el formato
+  return formatItalics(escapeHtml(text));
+}
+
+function replaceInRange(html, start, end, replacement) {
+  const startIdx = html.indexOf(start);
+  if (startIdx === -1) return html;
+  const endIdx = html.indexOf(end, startIdx);
+  if (endIdx === -1) return html;
+  return html.substring(0, startIdx) + replacement + html.substring(endIdx + end.length);
+}
+
+function replaceBlock(html, pattern, replacement) {
+  return html.replace(pattern, replacement);
+}
+
+// =============================================
+//   INIT
+// =============================================
+function init() {
+  bindFields();
+  renderSpecs();
+  renderMaterials();
+  renderSteps();
+  renderImpact();
+  ['f', 'o', 'd', 'a'].forEach(renderFoda);
+
+  // Aplicar imágenes guardadas a los thumbnails
+  Object.entries(state.images).forEach(([filename, dataUrl]) => {
+    document.querySelectorAll(`[id^="thumb-"][id$="${filename}"]`).forEach(img => {
+      img.src = dataUrl;
+      img.style.opacity = 1;
+    });
+    document.querySelectorAll(`[id^="status-"][id$="${filename}"]`).forEach(status => {
+      status.textContent = '✓ Modificada · se descargará con el sitio';
+      status.classList.add('changed');
+    });
+  });
+
+  // QR inicial
+  generateQRCode();
+}
+
+init();
+</script>
+
+</body>
+</html>

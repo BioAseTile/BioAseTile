@@ -16,8 +16,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=DM+Sans:opsz,wght@9..40,300..600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-<script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
-
 <style>
 /* ============================================== */
 /*  DESIGN SYSTEM                                  */
@@ -168,12 +166,73 @@ header {
   border-bottom: 1px solid transparent;
 }
 
+/* Estado inicial: sobre el video — texto claro */
+header .logo-text,
+header nav a {
+  color: var(--paper);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+  transition: color 0.4s ease, text-shadow 0.4s ease;
+}
+
+header .logo-text span {
+  color: var(--green-bright);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+}
+
+header .menu-toggle {
+  color: var(--paper);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+}
+
+header nav a::after { background: var(--green-bright); }
+
+header .nav-cta {
+  background: var(--paper) !important;
+  color: var(--ink) !important;
+  text-shadow: none !important;
+}
+
+header .nav-cta:hover {
+  background: var(--green-bright) !important;
+  color: var(--ink) !important;
+}
+
+/* Estado scrolled: fondo crema sólido — texto oscuro */
 header.scrolled {
   background: rgba(245, 237, 208, 0.92);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   padding: 0.8rem 2rem;
   border-bottom-color: rgba(26, 31, 18, 0.08);
+}
+
+header.scrolled .logo-text {
+  color: var(--ink);
+  text-shadow: none;
+}
+
+header.scrolled .logo-text span { color: var(--green); }
+
+header.scrolled nav a {
+  color: var(--ink);
+  text-shadow: none;
+}
+
+header.scrolled .menu-toggle {
+  color: var(--ink);
+  text-shadow: none;
+}
+
+header.scrolled nav a::after { background: var(--green); }
+
+header.scrolled .nav-cta {
+  background: var(--ink) !important;
+  color: var(--paper) !important;
+}
+
+header.scrolled .nav-cta:hover {
+  background: var(--green) !important;
+  color: var(--paper) !important;
 }
 
 .logo-wrap {
@@ -222,14 +281,13 @@ nav ul {
 }
 
 nav a {
-  color: var(--ink);
   text-decoration: none;
   font-size: 0.88rem;
   font-weight: 500;
   letter-spacing: 0.02em;
   position: relative;
   padding: 0.3rem 0;
-  transition: color 0.3s;
+  transition: color 0.3s, text-shadow 0.3s;
 }
 
 nav a::after {
@@ -239,22 +297,17 @@ nav a::after {
   left: 0;
   width: 0%;
   height: 1px;
-  background: var(--green);
   transition: width 0.3s ease;
 }
 
-nav a:hover { color: var(--green-deep); }
 nav a:hover::after { width: 100%; }
 
 .nav-cta {
   padding: 0.55rem 1.2rem !important;
-  background: var(--ink);
-  color: var(--paper) !important;
   border-radius: 100px;
   font-weight: 500;
 }
 
-.nav-cta:hover { background: var(--green) !important; }
 .nav-cta::after { display: none; }
 
 .menu-toggle {
@@ -263,7 +316,6 @@ nav a:hover::after { width: 100%; }
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
-  color: var(--ink);
 }
 
 /* ============================================== */
@@ -1539,25 +1591,60 @@ section.container {
 .g5 { grid-column: span 2; background-image: url('proceso-tratamiento.jpg'); }
 
 /* ============================================== */
-/*  CONTACTO + QR                                   */
+/*  CONTACTO + QR — diseño rediseñado               */
 /* ============================================== */
 .contacto-section {
   background: var(--ink);
   color: var(--paper);
   padding: 7rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Efecto sutil de gradiente en el fondo */
+.contacto-section::before {
+  content: '';
+  position: absolute;
+  top: -200px;
+  right: -200px;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(107, 166, 68, 0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.contacto-section::after {
+  content: '';
+  position: absolute;
+  bottom: -200px;
+  left: -200px;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(132, 193, 88, 0.08) 0%, transparent 70%);
+  pointer-events: none;
 }
 
 .contacto-inner {
-  max-width: 1400px;
+  max-width: 1100px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 5rem;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 4rem;
   align-items: center;
+  position: relative;
+  z-index: 1;
 }
 
 .contacto-inner .section-number { color: var(--green-bright); }
 .contacto-inner .section-number::before { background: var(--green-bright); }
+
+/* LADO IZQUIERDO: info de contacto */
+.contacto-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 2rem;
+}
 
 .contacto-info h2 {
   font-family: var(--display);
@@ -1566,7 +1653,7 @@ section.container {
   line-height: 1.02;
   letter-spacing: -0.03em;
   color: var(--paper);
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.2rem;
 }
 
 .contacto-info h2 em { color: var(--green-bright); font-style: italic; }
@@ -1575,75 +1662,193 @@ section.container {
   color: rgba(245, 237, 208, 0.7);
   font-size: 1.05rem;
   max-width: 480px;
-  margin-bottom: 2.5rem;
+  margin-bottom: 0;
+  line-height: 1.6;
 }
 
+/* Líneas de contacto rediseñadas como tarjetas pequeñas */
 .contact-rows {
   display: grid;
-  gap: 0;
-  margin-bottom: 2.5rem;
+  gap: 0.6rem;
+  margin: 1rem 0;
 }
 
-/* Mapa de ubicación */
-.location-map {
-  margin-bottom: 2.5rem;
-  border-radius: 8px;
+.contact-row {
+  display: grid;
+  grid-template-columns: 38px 1fr;
+  gap: 1rem;
+  padding: 1rem 1.2rem;
+  background: rgba(245, 237, 208, 0.04);
+  border: 1px solid rgba(245, 237, 208, 0.08);
+  border-radius: 12px;
+  align-items: center;
+  transition: background 0.3s, border-color 0.3s, transform 0.3s;
+}
+
+.contact-row:hover {
+  background: rgba(245, 237, 208, 0.07);
+  border-color: rgba(132, 193, 88, 0.3);
+  transform: translateX(4px);
+}
+
+.contact-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: rgba(132, 193, 88, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--green-bright);
+  flex-shrink: 0;
+}
+
+.contact-icon svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+}
+
+.contact-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.contact-label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(245, 237, 208, 0.5);
+}
+
+.contact-text a, .contact-text > span {
+  color: var(--paper);
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: color 0.3s;
+}
+
+.contact-text a:hover { color: var(--green-bright); }
+
+.contacto-right {
+  position: relative;
+}
+
+/* Mapa GRANDE (cuando ocupa la columna entera) */
+.location-map-large {
+  border-radius: 16px;
   overflow: hidden;
   position: relative;
   background: var(--paper-deep);
   border: 1px solid rgba(245, 237, 208, 0.1);
-  transition: transform 0.4s ease;
+  transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+  height: 480px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
 }
 
-.location-map:hover { transform: translateY(-4px); }
+.location-map-large:hover {
+  border-color: rgba(132, 193, 88, 0.4);
+  box-shadow: 0 40px 70px rgba(0, 0, 0, 0.4);
+}
 
-.location-map img {
+.location-map-large iframe {
   width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+  filter: grayscale(0.1) contrast(1.05);
+  transition: filter 0.4s ease;
+}
+
+.location-map-large:hover iframe {
+  filter: grayscale(0) contrast(1.1);
+}
+
+/* Mapa de ubicación compacto e integrado */
+.location-map {
+  margin-top: 0.5rem;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  background: var(--paper-deep);
+  border: 1px solid rgba(245, 237, 208, 0.1);
+  transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+  display: block;
+  height: 280px;
+}
+
+.location-map:hover {
+  transform: translateY(-3px);
+  border-color: rgba(132, 193, 88, 0.4);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+}
+
+.location-map iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
   display: block;
   filter: grayscale(0.15) contrast(1.05);
   transition: filter 0.4s ease;
 }
 
-.location-map:hover img { filter: grayscale(0) contrast(1.1); }
+.location-map:hover iframe {
+  filter: grayscale(0) contrast(1.1);
+}
 
+/* Overlay con la info y botón — clickeable, no bloquea el mapa */
 .location-map-overlay {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 1.5rem;
-  background: linear-gradient(180deg, transparent 0%, rgba(26, 31, 18, 0.95) 100%);
+  padding: 1.2rem;
+  background: linear-gradient(180deg, transparent 0%, rgba(26, 31, 18, 0.95) 70%);
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   gap: 1rem;
-  flex-wrap: wrap;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.location-map-overlay > * {
+  pointer-events: auto;
 }
 
 .location-map-info {
   color: var(--paper);
+  flex: 1;
 }
 
 .location-map-label {
   font-family: var(--mono);
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   letter-spacing: 0.25em;
   text-transform: uppercase;
   color: var(--green-bright);
   margin-bottom: 0.3rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .location-map-address {
   font-family: var(--display);
-  font-size: 1.05rem;
+  font-size: 0.95rem;
   font-style: italic;
   font-weight: 400;
   line-height: 1.3;
+  color: var(--paper);
 }
 
 .location-map-btn {
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--paper);
@@ -1651,11 +1856,15 @@ section.container {
   padding: 0.55rem 1rem;
   border: 1px solid rgba(245, 237, 208, 0.4);
   border-radius: 100px;
-  background: rgba(26, 31, 18, 0.5);
+  background: rgba(26, 31, 18, 0.7);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   transition: all 0.3s;
   white-space: nowrap;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
 }
 
 .location-map-btn:hover {
@@ -1664,54 +1873,28 @@ section.container {
   transform: translateX(3px);
 }
 
-.contact-row {
-  display: grid;
-  grid-template-columns: 140px 1fr;
-  gap: 1rem;
-  padding: 1.1rem 0;
-  border-bottom: 1px solid rgba(245, 237, 208, 0.1);
-  align-items: center;
-}
-
-.contact-label {
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(245, 237, 208, 0.6);
-}
-
-.contact-row a, .contact-row span:last-child {
-  color: var(--paper);
-  text-decoration: none;
-  font-size: 1rem;
-  transition: color 0.3s;
-}
-
-.contact-row a:hover { color: var(--green-bright); }
-
 .socials {
   display: flex;
-  gap: 0.8rem;
-  margin-top: 1.5rem;
+  gap: 0.7rem;
+  margin-top: 0.5rem;
 }
 
 .social-link {
-  width: 50px; height: 50px;
+  width: 46px; height: 46px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(245, 237, 208, 0.08);
+  background: rgba(245, 237, 208, 0.06);
   color: var(--paper);
   border-radius: 50%;
   text-decoration: none;
-  border: 1px solid rgba(245, 237, 208, 0.15);
+  border: 1px solid rgba(245, 237, 208, 0.12);
   transition: all 0.4s ease;
 }
 
 .social-link svg {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   fill: currentColor;
   transition: transform 0.3s;
 }
@@ -1724,56 +1907,99 @@ section.container {
 
 .social-link:hover svg { transform: scale(1.1); }
 
-/* QR Card */
+/* LADO DERECHO: QR Card mejorada */
 .qr-card {
-  background: var(--paper);
+  background: linear-gradient(180deg, var(--paper) 0%, var(--paper-deep) 100%);
   color: var(--ink);
-  padding: 2.5rem;
-  border-radius: 8px;
+  padding: 2.5rem 2.2rem;
+  border-radius: 20px;
   text-align: center;
-  box-shadow: 0 40px 70px rgba(0, 0, 0, 0.3);
+  box-shadow:
+    0 40px 80px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(132, 193, 88, 0.15);
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Decoración esquinas estilo "passport" */
+.qr-card::before, .qr-card::after {
+  content: '';
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border: 2px solid var(--green);
 }
 
 .qr-card::before {
-  content: '';
-  position: absolute;
-  inset: -8px;
-  border: 1px solid rgba(245, 237, 208, 0.2);
-  border-radius: 12px;
-  pointer-events: none;
+  top: 1rem;
+  left: 1rem;
+  border-right: none;
+  border-bottom: none;
+  border-top-left-radius: 8px;
 }
 
-.qr-card .qr-label {
+.qr-card::after {
+  bottom: 1rem;
+  right: 1rem;
+  border-left: none;
+  border-top: none;
+  border-bottom-right-radius: 8px;
+}
+
+.qr-label {
   font-family: var(--mono);
   font-size: 0.7rem;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.25em;
   text-transform: uppercase;
   color: var(--green);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.qr-label::before, .qr-label::after {
+  content: '';
+  width: 16px;
+  height: 1px;
+  background: var(--green);
 }
 
 .qr-card h3 {
   font-family: var(--display);
   font-weight: 400;
-  font-size: 1.6rem;
-  margin-bottom: 0.4rem;
+  font-size: 1.7rem;
+  line-height: 1.1;
+  margin-bottom: 0.6rem;
   letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.qr-card h3 em {
+  font-style: italic;
+  color: var(--green-deep);
 }
 
 .qr-card > p {
   color: var(--ink-soft);
   font-size: 0.9rem;
   margin-bottom: 1.5rem;
+  max-width: 320px;
+  line-height: 1.5;
 }
 
 #qrcode {
   display: inline-block;
   padding: 1rem;
   background: white;
-  border-radius: 8px;
+  border-radius: 14px;
   margin-bottom: 1.5rem;
   border: 1px solid rgba(26, 31, 18, 0.08);
+  box-shadow: 0 8px 20px rgba(26, 31, 18, 0.08);
 }
 
 #qrcode img, #qrcode canvas { display: block; }
@@ -1782,22 +2008,26 @@ section.container {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1rem;
+  width: 100%;
+  max-width: 340px;
 }
 
 .qr-input {
   flex: 1;
   padding: 0.75rem 1.1rem;
-  border: 1px solid rgba(26, 31, 18, 0.2);
+  border: 1px solid rgba(26, 31, 18, 0.15);
   border-radius: 100px;
   font-family: var(--mono);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   background: var(--paper-soft);
   color: var(--ink);
+  min-width: 0;
 }
 
 .qr-input:focus {
   outline: none;
   border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(107, 166, 68, 0.15);
 }
 
 .qr-btn {
@@ -1808,26 +2038,36 @@ section.container {
   border-radius: 100px;
   cursor: pointer;
   font-family: var(--sans);
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 500;
-  transition: background 0.3s;
+  transition: background 0.3s, transform 0.2s;
+  white-space: nowrap;
 }
 
-.qr-btn:hover { background: var(--green); }
+.qr-btn:hover {
+  background: var(--green);
+  transform: translateY(-1px);
+}
 
 .qr-download {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  color: var(--green);
+  color: var(--green-deep);
   text-decoration: none;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 600;
   font-family: var(--mono);
   letter-spacing: 0.05em;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s, color 0.3s;
 }
 
-.qr-download:hover { color: var(--green-deep); }
+.qr-download:hover {
+  color: var(--green);
+  border-bottom-color: var(--green);
+}
 
 /* ============================================== */
 /*  FOOTER                                          */
@@ -2096,25 +2336,44 @@ footer {
   .galeria-item::after { opacity: 0.6; }
 
   /* CONTACTO mejor jerarquía */
-  .contacto-info > p { font-size: 1rem; }
+  .contacto-inner { gap: 2.5rem; }
+  .contacto-info { gap: 1.5rem; }
+  .contacto-info > p { font-size: 0.98rem; }
+
   .contact-row {
-    grid-template-columns: 1fr;
-    gap: 0.2rem;
-    padding: 0.9rem 0;
+    grid-template-columns: 32px 1fr;
+    gap: 0.8rem;
+    padding: 0.85rem 1rem;
+    border-radius: 10px;
   }
-  .contact-label { font-size: 0.6rem; }
-  .contact-row a, .contact-row span:last-child { font-size: 0.95rem; }
-  .location-map-overlay { padding: 1.1rem; flex-direction: column; align-items: flex-start; gap: 0.8rem; }
-  .location-map-address { font-size: 0.95rem; }
-  .location-map-btn { font-size: 0.65rem; padding: 0.5rem 0.85rem; }
+  .contact-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+  }
+  .contact-icon svg { width: 15px; height: 15px; }
+  .contact-label { font-size: 0.58rem; }
+  .contact-text a, .contact-text > span { font-size: 0.88rem; }
+
+  .location-map { height: 160px; }
+  .location-map-overlay { padding: 1rem; }
+  .location-map-address { font-size: 0.88rem; }
+  .location-map-btn { font-size: 0.6rem; padding: 0.4rem 0.8rem; }
+  .location-map-large { height: 320px; border-radius: 12px; }
 
   /* QR CARD compacta */
-  .qr-card { padding: 1.8rem 1.5rem; }
-  .qr-card h3 { font-size: 1.4rem; }
+  .qr-card { padding: 2rem 1.5rem; border-radius: 18px; }
+  .qr-card::before, .qr-card::after { width: 22px; height: 22px; }
+  .qr-card h3 { font-size: 1.45rem; }
   .qr-card > p { font-size: 0.85rem; }
+  .qr-label { font-size: 0.62rem; }
+  .qr-label::before, .qr-label::after { width: 12px; }
   #qrcode { padding: 0.7rem; }
-  .qr-input-wrapper { flex-direction: column; }
+  .qr-input-wrapper { flex-direction: column; max-width: none; }
   .qr-input, .qr-btn { width: 100%; }
+
+  .social-link { width: 42px; height: 42px; }
+  .social-link svg { width: 16px; height: 16px; }
 
   /* CRONOGRAMA */
   .cronograma-table { padding: 1.25rem; }
@@ -2253,10 +2512,10 @@ footer {
 <section class="hero">
 
   <!-- Video de fondo (cinematográfico) -->
-  <!-- Camino de piedras con vegetación — alineado con el concepto del producto -->
-  <!-- PERSONALIZAR: cuando tengan su propio video del proceso, cambien la URL del src -->
+  <!-- Sendero de jardín con vegetación — uso real del producto -->
+  <!-- PERSONALIZAR: cuando tengan su propio video del producto instalado en un jardín, cambien la URL del src -->
   <video class="hero-video" autoplay muted loop playsinline preload="auto" poster="">
-    <source src="https://videos.pexels.com/video-files/9843061/9843061-uhd_2560_1440_30fps.mp4" type="video/mp4">
+    <source src="https://videos.pexels.com/video-files/34522518/14626918_1440_2560_60fps.mp4" type="video/mp4">
   </video>
 
   <!-- Overlay oscuro para legibilidad -->
@@ -2982,35 +3241,64 @@ footer {
 <section id="contacto" class="contacto-section">
   <div class="contacto-inner">
     <div class="contacto-info">
-      <div class="section-number reveal">09 / Contacto</div>
-      <h2 class="reveal delay-1">Hablemos.<br><em>Construyamos juntos</em>.</h2>
-      <p class="reveal delay-2">
-        ¿Te interesa conocer más del proyecto? Síguenos y escríbenos a través
-        de nuestras redes sociales.
-      </p>
+      <div>
+        <div class="section-number reveal">09 / Contacto</div>
+        <h2 class="reveal delay-1">Hablemos.<br><em>Construyamos juntos</em>.</h2>
+        <p class="reveal delay-2">
+          ¿Te interesa conocer más del proyecto? Síguenos y escríbenos a través
+          de nuestras redes sociales.
+        </p>
+      </div>
 
       <div class="contact-rows reveal delay-3">
         <div class="contact-row">
-          <span class="contact-label">Correo</span>
-          <a href="mailto:bioase.tile@gmail.com">bioase.tile@gmail.com</a>
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 8l9 6 9-6M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="contact-text">
+            <span class="contact-label">Correo</span>
+            <a href="mailto:bioase.tile@gmail.com">bioase.tile@gmail.com</a>
+          </div>
         </div>
+
         <div class="contact-row">
-          <span class="contact-label">Institución</span>
-          <span>CONALEP · Grupo 612 · 6.º semestre</span>
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2L4 7v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V7l-8-5z" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9 12h6M9 9h6M9 15h4" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="contact-text">
+            <span class="contact-label">Institución</span>
+            <span>CONALEP · Grupo 612 · 6.º semestre</span>
+          </div>
         </div>
       </div>
 
-      <!-- Mapa de ubicación (extraído del documento del proyecto) -->
-      <a href="https://www.google.com/maps/search/?api=1&query=Av.+Las+Flores+Nuevo+Progreso+Tamaulipas" target="_blank" class="location-map reveal delay-3" style="display: block; text-decoration: none;">
-        <img src="ubicacion.jpg" alt="Ubicación del proyecto BioAse Tile en Nuevo Progreso, Tamaulipas" loading="lazy">
+      <!-- Mapa interactivo de Google Maps -->
+      <!-- PERSONALIZAR: si necesitas ajustar la ubicación exacta, abre Google Maps,
+           busca la dirección, click en "Compartir" → "Insertar un mapa" → copia
+           solo el URL del src (https://www.google.com/maps/embed?pb=...) y pégalo aquí -->
+      <div class="location-map-large">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3589.6!2d-97.9533!3d26.0658!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjbCsDAzJzU3LjAiTiA5N8KwNTcnMTIuMCJX!5e0!3m2!1ses!2smx!4v1700000000000!5m2!1ses!2smx"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen
+          title="Ubicación de BioAse Tile en Nuevo Progreso, Tamaulipas">
+        </iframe>
         <div class="location-map-overlay">
           <div class="location-map-info">
             <div class="location-map-label">◆ Encuéntranos</div>
-            <div class="location-map-address">Av. Las Flores s/n<br>Nuevo Progreso, Tamaulipas</div>
+            <div class="location-map-address">Av. Las Flores s/n · Nuevo Progreso, Tamaulipas</div>
           </div>
-          <span class="location-map-btn">Abrir en Maps →</span>
+          <a href="https://www.google.com/maps/search/?api=1&query=Av.+Las+Flores+Nuevo+Progreso+Tamaulipas" target="_blank" rel="noopener" class="location-map-btn">
+            Cómo llegar →
+          </a>
         </div>
-      </a>
+      </div>
 
       <div class="socials reveal delay-4">
         <!-- PERSONALIZAR: cambia los # por los links reales de cada red social -->
@@ -3037,17 +3325,32 @@ footer {
       </div>
     </div>
 
-    <div class="qr-card reveal delay-2">
-      <div class="qr-label">Escanea · comparte</div>
-      <h3>Lleva BioAse Tile<br>contigo</h3>
-      <p>Genera el QR del sitio o de redes sociales y descárgalo para imprimirlo.</p>
-      <div id="qrcode"></div>
-      <div class="qr-input-wrapper">
-        <input type="text" id="qrUrl" class="qr-input" placeholder="https://tu-sitio.com" value="https://bioase-tile.com">
-        <button class="qr-btn" onclick="generateQR()">Generar</button>
+    <!-- Lado derecho: solo el mapa interactivo -->
+    <div class="contacto-right reveal delay-2">
+      <!-- Mapa interactivo de Google Maps -->
+      <!-- PERSONALIZAR: si necesitas ajustar la ubicación exacta, abre Google Maps,
+           busca la dirección, click en "Compartir" → "Insertar un mapa" → copia
+           solo el URL del src (https://www.google.com/maps/embed?pb=...) y pégalo aquí -->
+      <div class="location-map-large">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3589.6!2d-97.9533!3d26.0658!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjbCsDAzJzU3LjAiTiA5N8KwNTcnMTIuMCJX!5e0!3m2!1ses!2smx!4v1700000000000!5m2!1ses!2smx"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen
+          title="Ubicación de BioAse Tile en Nuevo Progreso, Tamaulipas">
+        </iframe>
+        <div class="location-map-overlay">
+          <div class="location-map-info">
+            <div class="location-map-label">◆ Encuéntranos</div>
+            <div class="location-map-address">Av. Las Flores s/n · Nuevo Progreso, Tamaulipas</div>
+          </div>
+          <a href="https://www.google.com/maps/search/?api=1&query=Av.+Las+Flores+Nuevo+Progreso+Tamaulipas" target="_blank" rel="noopener" class="location-map-btn">
+            Cómo llegar →
+          </a>
+        </div>
       </div>
-      <a href="#" id="downloadBtn" class="qr-download">↓ Descargar QR</a>
     </div>
+
   </div>
 </section>
 
@@ -3145,44 +3448,6 @@ function animateCounter(el) {
   }
   requestAnimationFrame(update);
 }
-
-// ============================================
-//  QR GENERATOR
-// ============================================
-let qr;
-const qrContainer = document.getElementById('qrcode');
-
-function generateQR() {
-  const url = document.getElementById('qrUrl').value.trim();
-  if (!url) { alert('Escribe una URL primero'); return; }
-  qrContainer.innerHTML = '';
-  qr = new QRCode(qrContainer, {
-    text: url,
-    width: 180,
-    height: 180,
-    colorDark: '#1A1F12',
-    colorLight: '#FFFFFF',
-    correctLevel: QRCode.CorrectLevel.H
-  });
-}
-
-window.addEventListener('load', () => generateQR());
-
-document.getElementById('downloadBtn').addEventListener('click', (e) => {
-  e.preventDefault();
-  const img = qrContainer.querySelector('img');
-  const canvas = qrContainer.querySelector('canvas');
-  let dataURL;
-  if (img && img.src) dataURL = img.src;
-  else if (canvas) dataURL = canvas.toDataURL('image/png');
-  else { alert('Primero genera un QR'); return; }
-  const a = document.createElement('a');
-  a.href = dataURL;
-  a.download = 'bioase-tile-qr.png';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-});
 
 // ============================================
 //  CLOSE MOBILE MENU ON LINK CLICK
