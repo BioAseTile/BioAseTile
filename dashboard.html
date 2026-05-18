@@ -1639,21 +1639,21 @@ main {
 
         <div class="qr-controls">
           <input type="text" id="qrUrlInput" class="input" placeholder="https://tu-sitio.com" value="https://bioasetile.github.io/bioase-tile/">
-          <button class="btn btn-secondary" onclick="generateQRCode()" style="white-space: nowrap;">
-            <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;"><path d="M3 12h18M12 3v18" stroke-linecap="round"/></svg>
-            Regenerar
-          </button>
         </div>
 
-        <div style="display: flex; justify-content: center; margin-top: 1.2rem;">
-          <button class="btn btn-primary" onclick="downloadQRCode()" style="padding: 0.85rem 2rem; font-size: 0.9rem;">
+        <div style="display: flex; gap: 0.6rem; justify-content: center; margin-top: 1.2rem; flex-wrap: wrap;">
+          <button class="btn btn-secondary" onclick="generateQRCode()" style="padding: 0.85rem 1.6rem; font-size: 0.9rem;">
+            <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3M17 14v3M14 17v3M20 17v4M17 21h4" stroke-linecap="round"/></svg>
+            Generar QR
+          </button>
+          <button class="btn btn-primary" onclick="downloadQRCode()" style="padding: 0.85rem 1.6rem; font-size: 0.9rem;">
             <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            Descargar QR como PNG
+            Descargar PNG
           </button>
         </div>
 
         <p style="font-size: 0.8rem; color: var(--gray-500); margin-top: 1rem;">
-          Tip: También puedes hacer click derecho sobre el QR de arriba y elegir "Guardar imagen como..."
+          Escribe la URL, presiona <strong>Generar QR</strong> y luego <strong>Descargar PNG</strong> para guardarlo.
         </p>
       </div>
     </div>
